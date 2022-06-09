@@ -1,0 +1,6 @@
+john(1,2).
+%john(2).
+
+john(3) :- john(4), not john(2).
+
+john(4).
