@@ -73,8 +73,8 @@ namespace ASP
         {
             string aspCode = @"
 
-                #const max_width = 10.
-                #const max_height = 10.
+                #const max_width = 50.
+                #const max_height = 50.
 
                 width(1..max_width).
                 height(1..max_height).
@@ -83,16 +83,16 @@ namespace ASP
 
                 1{tile(XX, YY, Type): tile_type(Type)}1 :- width(XX), height(YY).
 
-                :- Count = {tile(_,_,filled)}, Count != max_width.
+                %:- Count = {tile(_,_,filled)}, Count != max_width.
 
-                :- tile(X1,Y1, filled), tile(X2,Y2,filled), X1 == X2, Y1 != Y2.
-                :- tile(X1,Y1, filled), tile(X2,Y2,filled), Y1 == Y2, X1 != X2.
+                %:- tile(X1,Y1, filled), tile(X2,Y2,filled), X1 == X2, Y1 != Y2.
+                %:- tile(X1,Y1, filled), tile(X2,Y2,filled), Y1 == Y2, X1 != X2.
                 
                 %:- tile(X1,Y1,filled), tile(X2,Y2,filled), Delta = (X1 - X2) - (Y1 - Y2), Delta == 0, Y1 != Y2, X1 != X2.
                 %:- tile(X1,Y1,filled), tile(X2,Y2,filled), D1 = X1 - X2, D2 = Y1 - Y2, D1 == -D2, Y1 != Y2.
 
-                :- tile(XX,YY,filled), tile(XX + Offset, YY + Offset,filled), Offset = (1..max_width).
-                :- tile(XX,YY,filled), tile(XX + Offset, YY - Offset,filled), Offset = (1..max_width).
+                %:- tile(XX,YY,filled), tile(XX + Offset, YY + Offset,filled), Offset = (1..max_width).
+                %:- tile(XX,YY,filled), tile(XX + Offset, YY - Offset,filled), Offset = (1..max_width).
             ";
 
             return aspCode;

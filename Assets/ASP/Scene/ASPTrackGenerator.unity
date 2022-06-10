@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 758962457}
   - component: {fileID: 758962456}
   - component: {fileID: 758962458}
+  - component: {fileID: 758962459}
   m_Layer: 0
   m_Name: ASPGenerator
   m_TagString: Untagged
@@ -178,7 +179,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758962455}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c6cd05173429495c82a70e517f702f6, type: 3}
   m_Name: 
@@ -187,8 +188,26 @@ MonoBehaviour:
   timeout: 100
   solver: {fileID: 1038916950}
   runOnStart: 1
-  terrainWidth: 40
-  terrainHeight: 40
+  terrainWidth: 20
+  terrainHeight: 20
+--- !u!114 &758962459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758962455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df99add5425c40e99ec7db842a2a884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cpus: 4
+  timeout: 100
+  solver: {fileID: 1038916950}
+  runOnStart: 1
+  terrainWidth: 30
+  terrainHeight: 30
 --- !u!1 &928411954
 GameObject:
   m_ObjectHideFlags: 0
