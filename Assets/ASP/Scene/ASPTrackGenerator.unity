@@ -256,7 +256,7 @@ MonoBehaviour:
       - key: empty
         obj: {r: 1, g: 1, b: 1, a: 1}
       - key: track
-        obj: {r: 0.13919175, g: 1, b: 0, a: 1}
+        obj: {r: 0.46226418, g: 0.19976334, b: 0, a: 1}
   PixelSpacing: 1.1
 --- !u!4 &928411956
 Transform:

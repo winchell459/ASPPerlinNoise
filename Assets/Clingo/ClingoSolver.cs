@@ -28,7 +28,7 @@ namespace Clingo
         public bool useRandomSeed;
         public bool saveToFile = true;
         protected Dictionary<string, List<List<string>>> answerSetDict = new Dictionary<string, List<List<string>>>();
-        public AnswerSet answerSet;
+        [HideInInspector]public AnswerSet answerSet;
 
         // Read Only
         protected string aspCode;
