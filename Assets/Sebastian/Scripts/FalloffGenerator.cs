@@ -30,7 +30,7 @@ namespace Sebastian
 
         public static float[,] GenerateFalloffMap(MapGenerator mapSample)
         {
-            float[,] map = Noise.GenerateNoiseMap(mapSample.mapWidth, mapSample.mapHeight, mapSample.seed, mapSample.continentNoiseScale, mapSample.octaves, mapSample.persistance, mapSample.lacunarity, (mapSample.noiseScale/mapSample.continentNoiseScale) * mapSample.offset + mapSample.continentOffset);
+            float[,] map = Noise.GenerateNoiseMap(mapSample.mapWidth, mapSample.mapHeight, mapSample.seed, mapSample.continentNoiseScale, mapSample.continentOctaves, mapSample.continentPersistance, mapSample.continentLacunarity, (mapSample.noiseScale/mapSample.continentNoiseScale) * mapSample.offset + mapSample.continentOffset);
 
             
             return map;

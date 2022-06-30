@@ -21,6 +21,11 @@ namespace Sebastian
         public float persistance;
         public float lacunarity;
 
+        public int continentOctaves;
+        [Range(0, 1)]
+        public float continentPersistance;
+        public float continentLacunarity;
+
         public int seed;
         public Vector2 offset;
         public Vector2 continentOffset;
@@ -84,6 +89,17 @@ namespace Sebastian
                             break;
                         }
                     }
+                }
+            }
+
+            //visualize possible track
+            float maxY = 0.5f, minY = 0.4f;
+            for (int y = 0; y < mapHeight; y += 1)
+            {
+                for (int x = 0; x < mapWidth; x += 1)
+                {
+                    float height = noiseMap[x, y];
+                    if (height > minY && height < maxY) colorMap[y * mapWidth + x] = Color.grey;
                 }
             }
 
