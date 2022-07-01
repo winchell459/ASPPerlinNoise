@@ -113,7 +113,8 @@ namespace Sebastian
             }else if(drawMode == DrawMode.Mesh)
             {
                 display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve, useFlatShading), TextureGenerator.TextureFromColorMap(colorMap, mapWidth, mapHeight));
-            }else if(drawMode == DrawMode.FalloffMap)
+                
+            } else if(drawMode == DrawMode.FalloffMap)
             {
                 GenerateFalloff();
                 display.DrawTexture(TextureGenerator.TextureFromHeightMap(falloffMap));

@@ -9,6 +9,7 @@ namespace Sebastian
         public Renderer textureRender;
         public MeshFilter meshFilter;
         public MeshRenderer meshRenderer;
+        //public Mesh meshToCollide;
 
         public void DrawTexture(Texture2D texture)
         {
@@ -18,6 +19,8 @@ namespace Sebastian
         
         public void DrawMesh(MeshData meshData, Texture2D texture)
         {
+            //MeshCollider meshCollider = meshFilter.gameObject.AddComponent<MeshCollider>();
+            //meshCollider.sharedMesh = meshToCollide;
             meshFilter.sharedMesh = meshData.CreateMesh();
             meshRenderer.sharedMaterial.mainTexture = texture;
         }
