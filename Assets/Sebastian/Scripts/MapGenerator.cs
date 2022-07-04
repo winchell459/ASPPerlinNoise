@@ -65,7 +65,7 @@ namespace Sebastian
                 falloffMap = FalloffGenerator.GenerateFalloffMap(this);
             }
         }
-
+        public float trackMaxY = 0.5f, trackMaxX = 0.4f;
         public void GenerateMap()
         {
             float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale,octaves,persistance,lacunarity, offset);
@@ -93,13 +93,13 @@ namespace Sebastian
             }
 
             //visualize possible track
-            float maxY = 0.5f, minY = 0.4f;
+            
             for (int y = 0; y < mapHeight; y += 1)
             {
                 for (int x = 0; x < mapWidth; x += 1)
                 {
                     float height = noiseMap[x, y];
-                    if (height > minY && height < maxY) colorMap[y * mapWidth + x] = Color.grey;
+                    if (height > trackMaxX && height < trackMaxY) colorMap[y * mapWidth + x] = Color.grey;
                 }
             }
 
