@@ -103,7 +103,8 @@ namespace Sebastian
                 }
             }
 
-            MapDisplay display = FindObjectOfType<MapDisplay>();
+            //MapDisplay display = FindObjectOfType<MapDisplay>();
+            MapDisplay display = GetComponent<MapDisplay>();
             if(drawMode == DrawMode.NoiseMap) 
                 display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
             else if(drawMode == DrawMode.ColorMap)

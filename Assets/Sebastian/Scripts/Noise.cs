@@ -39,8 +39,8 @@ namespace Sebastian
 
                     for(int i = 0; i < octaves; i += 1)
                     {
-                        float sampleX = (x - halfWidth) / scale * frequency + octaveOffsets[i].x;
-                        float sampleY = (y - halfHeight) / scale * frequency + octaveOffsets[i].y;
+                        float sampleX = (x - halfWidth + octaveOffsets[i].x) / scale * frequency ;
+                        float sampleY = (y - halfHeight + octaveOffsets[i].y) / scale * frequency ;
 
                         float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
                         noiseHeight += perlinValue * amplitude;
