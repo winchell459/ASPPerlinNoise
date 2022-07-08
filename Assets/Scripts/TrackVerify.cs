@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class TrackVerify 
 {
-    public static bool CheckTrack(float[,] heightMap, float minY, float maxY)
+    public static bool[,] CheckTrack(float[,] heightMap, float minY, float maxY)
     {
         bool valid = true;
 
@@ -12,7 +12,8 @@ public static class TrackVerify
         int width = heightMap.GetLength(0);
         
         node[,] trackNodes = new node[width, height];
-        for(int x = 0; x < width; x += 1)
+        bool[,] trackNodeBools = new bool[width, height];
+        for (int x = 0; x < width; x += 1)
         {
             for (int y = 0; y < height; y += 1)
             {
@@ -21,9 +22,12 @@ public static class TrackVerify
                     node trackNode = new node(new Vector2Int(x,y));
 
                     trackNodes[x, y] = trackNode;
+                    trackNodeBools[x, y] = true;
                 }
             }
         }
+
+
 
         for (int x = 0; x < width; x += 1)
         {
@@ -62,7 +66,7 @@ public static class TrackVerify
             Debug.Log(loopList);
         }
 
-        return valid;
+        return trackNodeBools;
     }
 
     static bool ValidHeight(float height, float minY, float maxY)

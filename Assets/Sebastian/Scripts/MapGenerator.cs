@@ -68,6 +68,7 @@ namespace Sebastian
         public float trackMaxY = 0.5f, trackMinY = 0.4f;
         public Noise.NormalizeMode normalizeMode;
         public bool debugLoops;
+        public MemoryScriptableObject aspMemory;
         public void GenerateMap()
         {
             float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale,octaves,persistance,lacunarity, offset, normalizeMode);
@@ -93,7 +94,11 @@ namespace Sebastian
                     }
                 }
             }
-            if (debugLoops) TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY);
+            if (debugLoops)
+            {
+                bool[,] aspTrackBoard = TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY);
+                aspMemory.SetData( aspTrackBoard );
+            }
             //visualize possible track
 
             for (int y = 0; y < mapHeight; y += 1)

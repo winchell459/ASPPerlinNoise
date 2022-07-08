@@ -81,7 +81,7 @@ namespace Clingo
 
     }
 
-    [System.Serializable]
+    //[System.Serializable]
     public class Witnesses
     {
         public Witnesses(string json)
@@ -129,7 +129,7 @@ namespace Clingo
         }
     }
 
-    [System.Serializable]
+    //[System.Serializable]
     public class Value
     {
         public List<string> RawValue = new List<string>();
@@ -217,13 +217,13 @@ namespace Clingo
         }
     }
 
-    [System.Serializable]
+    //[System.Serializable]
     public class Result
     {
 
     }
 
-    [System.Serializable]
+    //[System.Serializable]
     public class Time
     {
         public double Total;

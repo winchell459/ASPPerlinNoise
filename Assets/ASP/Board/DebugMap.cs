@@ -24,7 +24,9 @@ namespace ASP
 
         public void DisplayMap(Clingo.AnswerSet answerset, MapKey<Color> mapKey)
         {
-            DisplayMap(answerset, mapKey.widthKey, mapKey.heightKey, mapKey.pixelKey, mapKey.xIndex, mapKey.yIndex, mapKey.pixelTypeIndex, mapKey.dict);
+            //DisplayMap(answerset, mapKey.widthKey, mapKey.heightKey, mapKey.pixelKey, mapKey.xIndex, mapKey.yIndex, mapKey.pixelTypeIndex, mapKey.dict)
+            Debug.Log("DisplayMap");
+            StartCoroutine(SetPixels(answerset, mapKey.widthKey, mapKey.heightKey, mapKey.pixelKey, mapKey.xIndex, mapKey.yIndex, mapKey.pixelTypeIndex, mapKey.dict));
         }
         public void DisplayMap(Clingo.AnswerSet answerset, string widthKey, string heightKey, string pixelKey, int xIndex, int yIndex, int pixelTypeIndex, MapObjectKey<Color> colorDict)
         {
@@ -41,10 +43,8 @@ namespace ASP
                 //Debug.Log($"pixelKey : {pixelKey} | pixelTypeIndex : {pixelTypeIndex}");
                 if (map[x, y] == null)
                 {
-                    DebugPixel pixel = Instantiate(PixelPrefab, transform).GetComponent<DebugPixel>();
-                    pixel.SetPixel(x * PixelSpacing, y * PixelSpacing, colorDict[pixelType]);
-                    pixel.AddNote(pixelASP);
-                    map[x, y] = pixel;
+                    SetPixel(x, y, colorDict[pixelType], pixelASP.ToString());
+                    //SetPixel(x, y, colorDict[pixelType], pixelASP.ToString());
                 }
                 else
                 {
@@ -54,6 +54,43 @@ namespace ASP
                 }
 
             }
+        }
+
+        public IEnumerator SetPixels(Clingo.AnswerSet answerset, string widthKey, string heightKey, string pixelKey, int xIndex, int yIndex, int pixelTypeIndex, MapObjectKey<Color> colorDict)
+        {
+
+            map = setupMap(answerset, widthKey, heightKey, map);
+            //ClearMap(new Vector2Int(minWidth - 1, minHeight - 1), new Vector2Int(maxWidth - 1, maxheight - 1));
+            foreach (List<string> pixelASP in answerset.Value[pixelKey])
+            {
+                Debug.Log(pixelASP[xIndex]);
+                int x = int.Parse(pixelASP[xIndex]) - 1;
+                int y = int.Parse(pixelASP[yIndex]) - 1;
+
+                string pixelType = pixelASP[pixelTypeIndex];
+
+                //Debug.Log($"pixelKey : {pixelKey} | pixelTypeIndex : {pixelTypeIndex}");
+                if (map[x, y] == null)
+                {
+                    SetPixel(x, y, colorDict[pixelType], pixelASP.ToString());
+                    //SetPixel(x, y, colorDict[pixelType], pixelASP.ToString());
+                }
+                else
+                {
+                    map[x, y].SetPixel(x * PixelSpacing, y * PixelSpacing, colorDict[pixelType]);
+                    map[x, y].AddNote(pixelASP);
+                    map[x, y].gameObject.SetActive(true);
+                }
+                yield return null;
+            }
+        }
+
+        void SetPixel(int x, int y, Color color, string pixelASP)
+        {
+            DebugPixel pixel = Instantiate(PixelPrefab, transform).GetComponent<DebugPixel>();
+            pixel.SetPixel(x * PixelSpacing, y * PixelSpacing, color);
+            pixel.AddNote(pixelASP);
+            map[x, y] = pixel;
         }
 
         override public void AdjustCamera()

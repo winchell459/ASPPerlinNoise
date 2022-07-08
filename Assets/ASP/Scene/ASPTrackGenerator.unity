@@ -206,8 +206,9 @@ MonoBehaviour:
   timeout: 100
   solver: {fileID: 1038916950}
   runOnStart: 1
-  terrainWidth: 30
-  terrainHeight: 30
+  terrainWidth: 100
+  terrainHeight: 100
+  trackMemory: {fileID: 11400000, guid: 7613d4e3e9bbab2479ece66dbaf051a7, type: 2}
 --- !u!1 &928411954
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,7 +246,7 @@ MonoBehaviour:
   mapKey:
     widthKey: width
     heightKey: height
-    pixelKey: tile
+    pixelKey: tileTrack
     xIndex: 0
     yIndex: 1
     pixelTypeIndex: 2
@@ -315,17 +316,7 @@ MonoBehaviour:
   answerSet:
     Solver: 
     Input: []
-    Call:
-      Witnesses:
-        Value:
-          RawValue: []
     Result: 
-    Time:
-      Total: 0
-      Solve: 0
-      Model: 0
-      Unsat: 0
-      CPU: 0
 --- !u!4 &1038916951
 Transform:
   m_ObjectHideFlags: 0
