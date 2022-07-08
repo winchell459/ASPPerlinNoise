@@ -45,4 +45,27 @@ public class MemoryScriptableObject : ScriptableObject
         Debug.Log(strMap);
         return aspCode;
     }
+
+    public string GetASCIIMap()
+    {
+        string strMap = "";
+        
+
+        int height = data.Length / width;
+
+        for (int i = 0; i < data.Length; i += 1)
+        {
+            if (data[i])
+            {
+                strMap += " ";
+            }
+            else
+            {
+                strMap += "0";
+            }
+            if (i % width == width - 1) strMap += "\n";
+        }
+        
+        return strMap;
+    }
 }

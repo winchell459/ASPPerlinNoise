@@ -73,6 +73,7 @@ namespace Sebastian
         {
             float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale,octaves,persistance,lacunarity, offset, normalizeMode);
             
+            
             Color[] colorMap = new Color[mapWidth * mapHeight];
             for (int y = 0; y < mapHeight; y += 1)
             {
@@ -98,7 +99,8 @@ namespace Sebastian
             {
                 bool[,] aspTrackBoard = TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY);
                 aspMemory.SetData( aspTrackBoard );
-                aspMemory.GetASPCode();
+                Utility.CreateFile(aspMemory.GetASCIIMap(), "");
+                Debug.Log($"{aspTrackBoard.GetLength(0)} {aspTrackBoard.GetLength(1)}");
             }
             //visualize possible track
 
@@ -110,7 +112,7 @@ namespace Sebastian
                     if (height > trackMinY && height < trackMaxY) colorMap[y * mapWidth + x] = Color.grey;
                 }
             }
-
+            
             //MapDisplay display = FindObjectOfType<MapDisplay>();
             MapDisplay display = GetComponent<MapDisplay>();
             if(drawMode == DrawMode.NoiseMap) 
