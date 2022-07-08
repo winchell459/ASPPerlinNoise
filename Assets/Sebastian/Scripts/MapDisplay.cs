@@ -11,6 +11,16 @@ namespace Sebastian
         public MeshRenderer meshRenderer;
         //public Mesh meshToCollide;
 
+        private void Start()
+        {
+            AddMesh();
+        }
+        public void AddMesh()
+        {
+            MeshCollider collider = meshRenderer.gameObject.GetComponent<MeshCollider>();
+            if (collider) Destroy(collider);
+            meshRenderer.gameObject.AddComponent<MeshCollider>();
+        }
         public void DrawTexture(Texture2D texture)
         {
             textureRender.sharedMaterial.mainTexture = texture;
@@ -19,8 +29,6 @@ namespace Sebastian
         
         public void DrawMesh(MeshData meshData, Texture2D texture)
         {
-            //MeshCollider meshCollider = meshFilter.gameObject.AddComponent<MeshCollider>();
-            //meshCollider.sharedMesh = meshToCollide;
             meshFilter.sharedMesh = meshData.CreateMesh();
             meshRenderer.sharedMaterial.mainTexture = texture;
         }

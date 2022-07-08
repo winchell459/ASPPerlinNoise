@@ -18,7 +18,8 @@ public static class TrackVerify
             {
                 if(ValidHeight(heightMap[x,y], minY, maxY))
                 {
-                    node trackNode = new node();
+                    node trackNode = new node(new Vector2Int(x,y));
+
                     trackNodes[x, y] = trackNode;
                 }
             }
@@ -38,7 +39,7 @@ public static class TrackVerify
                     {
                         trackNode.right = trackNodes[x + 1, y];
                     }
-                    if (y < height && ValidHeight(heightMap[x, y + 1], minY, maxY))
+                    if (y < height - 1 && ValidHeight(heightMap[x, y + 1], minY, maxY))
                     {
                         trackNode.down = trackNodes[x, y + 1];
                     }
@@ -50,7 +51,16 @@ public static class TrackVerify
             }
         }
 
-
+        List<List<node>> loops = GetLoops(trackNodes);
+        foreach(List<node> loop in loops)
+        {
+            string loopList = "";
+            foreach(node square in loop)
+            {
+                loopList += square.pos + " ";
+            }
+            Debug.Log(loopList);
+        }
 
         return valid;
     }
@@ -63,10 +73,16 @@ public static class TrackVerify
 
     class node
     {
+        public Vector2Int pos;
         public node up;
         public node right;
         public node down;
         public node left;
+
+        public node(Vector2Int pos)
+        {
+            this.pos = pos;
+        }
     }
 
     static List<List<node>> GetLoops(node[,] trackNodes)

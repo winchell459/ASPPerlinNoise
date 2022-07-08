@@ -6,24 +6,34 @@ namespace Sebastian
 {
     public static class Noise
     {
-        public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset)
+        public enum NormalizeMode { Local, Global};
+
+        public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode)
         {
             float[,] noiseMap = new float[mapWidth, mapHeight];
 
             System.Random prng = new System.Random(seed);
             Vector2[] octaveOffsets = new Vector2[octaves];
-            for(int i = 0; i < octaves; i += 1)
+
+            float maxPossibleHeight = 0;
+            float amplitude = 1;
+            float frequency = 1;
+
+            for (int i = 0; i < octaves; i += 1)
             {
                 float offsetX = prng.Next(-100000, 100000) + offset.x;
-                float offsetY = prng.Next(-100000, 100000) + offset.y;
+                float offsetY = prng.Next(-100000, 100000) - offset.y;
                 octaveOffsets[i] = new Vector2(offsetX, offsetY);
+
+                maxPossibleHeight += amplitude;
+                amplitude *= persistance;
             }
 
             //clamp scale
             scale = scale <= 0 ? 0.0001f : scale;
 
-            float maxNoiseHeight = float.MinValue;
-            float minNoiseHeight = float.MaxValue;
+            float maxLocalNoiseHeight = float.MinValue;
+            float minLocalNoiseHeight = float.MaxValue;
 
             float halfWidth = mapWidth / 2f;
             float halfHeight = mapHeight / 2f;
@@ -33,8 +43,8 @@ namespace Sebastian
             {
                 for(int x = 0; x < mapWidth; x += 1)
                 {
-                    float amplitude = 1;
-                    float frequency = 1;
+                    amplitude = 1;
+                    frequency = 1;
                     float noiseHeight = 0;
 
                     for(int i = 0; i < octaves; i += 1)
@@ -48,8 +58,8 @@ namespace Sebastian
                         amplitude *= persistance;
                         frequency *= lacunarity;
                     }
-                    if (noiseHeight > maxNoiseHeight) maxNoiseHeight = noiseHeight;
-                    if (noiseHeight < minNoiseHeight) minNoiseHeight = noiseHeight;
+                    if (noiseHeight > maxLocalNoiseHeight) maxLocalNoiseHeight = noiseHeight;
+                    if (noiseHeight < minLocalNoiseHeight) minLocalNoiseHeight = noiseHeight;
                     noiseMap[x, y] = noiseHeight;
                 }
             }
@@ -58,7 +68,16 @@ namespace Sebastian
             {
                 for (int x = 0; x < mapWidth; x += 1)
                 {
-                    noiseMap[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap[x, y]);
+                    if(normalizeMode == NormalizeMode.Local)
+                    {
+                        noiseMap[x, y] = Mathf.InverseLerp(minLocalNoiseHeight, maxLocalNoiseHeight, noiseMap[x, y]);
+                    }
+                    else
+                    {
+                        float normalizedHeight = (noiseMap[x, y] + 1) / (2f * maxPossibleHeight/ 1.75f);
+                        noiseMap[x, y] = Mathf.Clamp(normalizedHeight,0,int.MaxValue);
+                    }
+                    
                 }
             }
             return noiseMap;

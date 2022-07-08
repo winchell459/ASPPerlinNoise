@@ -28,9 +28,9 @@ namespace Sebastian
             return map;
         }
 
-        public static float[,] GenerateFalloffMap(MapGenerator mapSample)
+        public static float[,] GenerateFalloffMap(MapGenerator mapSample, Noise.NormalizeMode normalizeMode)
         {
-            float[,] map = Noise.GenerateNoiseMap(mapSample.mapWidth, mapSample.mapHeight, mapSample.seed, mapSample.continentNoiseScale, mapSample.continentOctaves, mapSample.continentPersistance, mapSample.continentLacunarity, (mapSample.noiseScale/mapSample.continentNoiseScale) * mapSample.offset + mapSample.continentOffset);
+            float[,] map = Noise.GenerateNoiseMap(mapSample.mapWidth, mapSample.mapHeight, mapSample.seed, mapSample.continentNoiseScale, mapSample.continentOctaves, mapSample.continentPersistance, mapSample.continentLacunarity, (mapSample.noiseScale/mapSample.continentNoiseScale) * mapSample.offset + mapSample.continentOffset, normalizeMode);
 
             
             return map;
