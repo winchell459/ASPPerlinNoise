@@ -33,7 +33,7 @@ public class MemoryScriptableObject : ScriptableObject
             if (data[i])
             {
                 aspCode += $" tile({i % width + 1},{i / height + 1},track). \n";
-                strMap += "1";
+                strMap += " ";
             }
             else
             {

@@ -52,6 +52,10 @@ public static class TrackVerify
                         trackNode.left = trackNodes[x - 1, y];
                     }
                 }
+                else
+                {
+
+                }
             }
         }
 

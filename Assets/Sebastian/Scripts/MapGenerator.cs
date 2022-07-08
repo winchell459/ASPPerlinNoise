@@ -98,6 +98,7 @@ namespace Sebastian
             {
                 bool[,] aspTrackBoard = TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY);
                 aspMemory.SetData( aspTrackBoard );
+                aspMemory.GetASPCode();
             }
             //visualize possible track
 
