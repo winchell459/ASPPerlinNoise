@@ -112,20 +112,44 @@ namespace Sebastian
                     if (height > trackMinY && height < trackMaxY) colorMap[y * mapWidth + x] = Color.grey;
                 }
             }
-            
-            //MapDisplay display = FindObjectOfType<MapDisplay>();
-            MapDisplay display = GetComponent<MapDisplay>();
-            if(drawMode == DrawMode.NoiseMap) 
-                display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
-            else if(drawMode == DrawMode.ColorMap)
+            if (!debuggingDisplays)
             {
-                
+                MapDisplay display = GetComponent<MapDisplay>();
+                MapDisplay(display, noiseMap, colorMap, mapWidth, mapHeight);
+            }
+            else
+            {
+                int displayHeight = displays.Length / displayWidth;
+                MapDisplay(displays[0], Utility.GetSubArray(noiseMap,0, 0, mapWidth/2 - 1, mapHeight / 2-1), Utility.GetSubArray(colorMap, 0, (mapWidth * mapHeight) / 4 - 1), mapWidth /2, mapHeight/2);
+                MapDisplay(displays[1], Utility.GetSubArray(noiseMap, mapWidth / 2, 0, mapWidth - 1, mapHeight / 2 - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 4, (mapWidth * mapHeight) / 2 - 1), mapWidth / 2, mapHeight / 2);
+                MapDisplay(displays[2], Utility.GetSubArray(noiseMap, 0, mapHeight / 2, mapWidth / 2 - 1, mapHeight - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 2, ((mapWidth * mapHeight) / 2 + (mapWidth * mapHeight) / 4)  - 1), mapWidth / 2, mapHeight / 2);
+                MapDisplay(displays[3], Utility.GetSubArray(noiseMap, mapWidth / 2, mapHeight / 2, mapWidth - 1, mapHeight - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 2 + (mapWidth * mapHeight) / 4, (mapWidth * mapHeight) - 1), mapWidth / 2, mapHeight / 2);
+            }
+            
+
+        }
+        public bool debuggingDisplays;
+        public MapDisplay[] displays;
+        public int displayWidth = 2;
+        public int displayResolution = 100;
+
+        void MapDisplay(MapDisplay display, float[,] noiseMap, Color[] colorMap, int mapWidth, int mapHeight)
+        {
+            //MapDisplay display = FindObjectOfType<MapDisplay>();
+            
+            if (drawMode == DrawMode.NoiseMap)
+                display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
+            else if (drawMode == DrawMode.ColorMap)
+            {
+
                 display.DrawTexture(TextureGenerator.TextureFromColorMap(colorMap, mapWidth, mapHeight));
-            }else if(drawMode == DrawMode.Mesh)
+            }
+            else if (drawMode == DrawMode.Mesh)
             {
                 display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve, useFlatShading), TextureGenerator.TextureFromColorMap(colorMap, mapWidth, mapHeight));
-                
-            } else if(drawMode == DrawMode.FalloffMap)
+
+            }
+            else if (drawMode == DrawMode.FalloffMap)
             {
                 GenerateFalloff();
                 display.DrawTexture(TextureGenerator.TextureFromHeightMap(falloffMap));
