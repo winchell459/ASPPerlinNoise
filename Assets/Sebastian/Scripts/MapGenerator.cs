@@ -177,6 +177,14 @@ namespace Sebastian
             }
         }
 
+        public void AddMesh()
+        {
+            foreach(MapDisplay display in displays)
+            {
+                display.AddMesh();
+            }
+        }
+
         private void OnValidate()
         {
             if (mapWidth < 1) mapWidth = 1;
