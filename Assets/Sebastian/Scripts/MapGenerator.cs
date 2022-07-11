@@ -47,7 +47,7 @@ namespace Sebastian
         private void Awake()
         {
             GenerateFalloff();
-            
+            GenerateMap();
             
         }
 
@@ -120,10 +120,31 @@ namespace Sebastian
             else
             {
                 int displayHeight = displays.Length / displayWidth;
-                MapDisplay(displays[0], Utility.GetSubArray(noiseMap,0, 0, mapWidth/2 - 1, mapHeight / 2-1), Utility.GetSubArray(colorMap, 0, (mapWidth * mapHeight) / 4 - 1), mapWidth /2, mapHeight/2);
-                MapDisplay(displays[1], Utility.GetSubArray(noiseMap, mapWidth / 2, 0, mapWidth - 1, mapHeight / 2 - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 4, (mapWidth * mapHeight) / 2 - 1), mapWidth / 2, mapHeight / 2);
-                MapDisplay(displays[2], Utility.GetSubArray(noiseMap, 0, mapHeight / 2, mapWidth / 2 - 1, mapHeight - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 2, ((mapWidth * mapHeight) / 2 + (mapWidth * mapHeight) / 4)  - 1), mapWidth / 2, mapHeight / 2);
-                MapDisplay(displays[3], Utility.GetSubArray(noiseMap, mapWidth / 2, mapHeight / 2, mapWidth - 1, mapHeight - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 2 + (mapWidth * mapHeight) / 4, (mapWidth * mapHeight) - 1), mapWidth / 2, mapHeight / 2);
+                int x0, y0, x1, y1;
+                x0 = 0;
+                y0 = 0;
+                x1 = mapWidth / 2 - 1;
+                y1 = mapHeight / 2 - 1;
+                MapDisplay(displays[0], Utility.GetSubArray(noiseMap,x0, y0, x1, y1), Utility.GetSubArray(colorMap, mapWidth, x0, y0, x1, y1), mapWidth /2, mapHeight/2);
+                x0 = mapWidth / 2 - 1;
+                y0 = 0;
+                x1 = mapWidth - 2;
+                y1 = mapHeight / 2 - 1;
+                MapDisplay(displays[1], Utility.GetSubArray(noiseMap, x0, y0, x1, y1), Utility.GetSubArray(colorMap, mapWidth, x0, y0, x1, y1), mapWidth / 2, mapHeight / 2);
+                x0 = 0;
+                y0 = mapHeight / 2 - 1;
+                x1 = mapWidth / 2 - 1;
+                y1 = mapHeight - 2;
+                MapDisplay(displays[2], Utility.GetSubArray(noiseMap, x0, y0, x1, y1), Utility.GetSubArray(colorMap, mapWidth, x0, y0, x1, y1), mapWidth / 2, mapHeight / 2);
+                x0 = mapWidth / 2 - 1;
+                y0 = mapHeight / 2 - 1;
+                x1 = mapWidth - 2;
+                y1 = mapHeight - 2;
+                MapDisplay(displays[3], Utility.GetSubArray(noiseMap, x0, y0, x1, y1), Utility.GetSubArray(colorMap, mapWidth, x0, y0, x1, y1), mapWidth / 2, mapHeight / 2);
+
+                //MapDisplay(displays[1], Utility.GetSubArray(noiseMap, mapWidth / 2, 0, mapWidth - 1, mapHeight / 2 - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 4, (mapWidth * mapHeight) / 2 - 1), mapWidth / 2, mapHeight / 2);
+                //MapDisplay(displays[2], Utility.GetSubArray(noiseMap, 0, mapHeight / 2, mapWidth / 2 - 1, mapHeight - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 2, ((mapWidth * mapHeight) / 2 + (mapWidth * mapHeight) / 4)  - 1), mapWidth / 2, mapHeight / 2);
+                //MapDisplay(displays[3], Utility.GetSubArray(noiseMap, mapWidth / 2, mapHeight / 2, mapWidth - 1, mapHeight - 1), Utility.GetSubArray(colorMap, (mapWidth * mapHeight) / 2 + (mapWidth * mapHeight) / 4, (mapWidth * mapHeight) - 1), mapWidth / 2, mapHeight / 2);
             }
             
 

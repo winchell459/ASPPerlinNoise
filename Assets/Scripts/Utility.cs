@@ -20,6 +20,21 @@ public static class Utility
         }
         return subArray;
     }
+    public static T[] GetSubArray<T>(T[] array, int arrayWidth, int x0, int y0, int x1, int y1)
+    {
+        int width = x1 - x0 + 1;
+        int height = y1 - y0 + 1;
+        int arrayHeight = array.Length / arrayWidth;
+        //T[] subArray = new T[width * height];
+        List<T> subArray = new List<T>();
+        for (int i = 0; i < array.Length; i += 1)
+        {
+            int x = i % arrayWidth;
+            int y = i / arrayWidth;
+            if (x <= x1 && x >= x0 && y >= y0 && y <= y1) subArray.Add(array[i]);
+        }
+        return subArray.ToArray();
+    }
     public static T[] GetSubArray<T> (T[] array, int i0, int i1)
     {
         int width = i1 - i0 + 1;

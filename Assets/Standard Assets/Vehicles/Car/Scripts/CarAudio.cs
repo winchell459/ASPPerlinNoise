@@ -50,6 +50,7 @@ namespace UnityStandardAssets.Vehicles.Car
         private CarController m_CarController; // Reference to car we are controlling
 
         public float masterVolume = 0.5f;
+        public bool set3DAudio;
         private void StartSound()
         {
             // get the carcontroller ( this will not be null as we have require component)
@@ -171,6 +172,7 @@ namespace UnityStandardAssets.Vehicles.Car
             source.minDistance = 5;
             source.maxDistance = maxRolloffDistance;
             source.dopplerLevel = 0;
+            if (set3DAudio) source.spatialBlend = 1;
             return source;
         }
 
