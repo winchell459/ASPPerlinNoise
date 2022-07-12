@@ -149,6 +149,7 @@ namespace Sebastian
             
 
         }
+        public bool debuggingMeshCollider;
         public bool debuggingDisplays;
         public MapDisplay[] displays;
         public int displayWidth = 2;
@@ -168,7 +169,7 @@ namespace Sebastian
             else if (drawMode == DrawMode.Mesh)
             {
                 display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve, useFlatShading), TextureGenerator.TextureFromColorMap(colorMap, mapWidth, mapHeight));
-
+                
             }
             else if (drawMode == DrawMode.FalloffMap)
             {

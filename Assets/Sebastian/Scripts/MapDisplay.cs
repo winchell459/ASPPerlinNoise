@@ -13,7 +13,7 @@ namespace Sebastian
 
         private void Start()
         {
-            AddMesh();
+            //AddMesh();
         }
         public void AddMesh()
         {
@@ -31,6 +31,13 @@ namespace Sebastian
         {
             meshFilter.sharedMesh = meshData.CreateMesh();
             meshRenderer.sharedMaterial.mainTexture = texture;
+        }
+
+        public void DrawMesh(MeshData meshData, Texture2D texture, bool buildMeshCollider)
+        {
+            meshFilter.sharedMesh = meshData.CreateMesh();
+            meshRenderer.sharedMaterial.mainTexture = texture;
+            AddMesh();
         }
     }
 }

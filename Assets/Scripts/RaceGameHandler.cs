@@ -22,8 +22,11 @@ public class RaceGameHandler : MonoBehaviour
         if (!paused) Time.timeScale = 1;
         else Time.timeScale = 0;
         pauseMenuPanel.SetActive(false);
-        //mapGenerator.AddMesh();
+        //
         StartCoroutine(CountdownTimer(startCountdown, 1, 3));
+        mapGenerator.seed = Random.Range(0, 10000);
+        mapGenerator.GenerateMap();
+        //mapGenerator.AddMesh();
     }
 
     // Update is called once per frame
@@ -49,7 +52,7 @@ public class RaceGameHandler : MonoBehaviour
         {
             player.gameObject.SetActive(true);
             mainCamera.transform.parent = player;
-            ai.gameObject.SetActive(true);
+            //ai.gameObject.SetActive(true);
         }
     }
 
@@ -86,5 +89,10 @@ public class RaceGameHandler : MonoBehaviour
     public void MainMenu()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void RebuildMesh()
+    {
+        mapGenerator.AddMesh();
     }
 }
