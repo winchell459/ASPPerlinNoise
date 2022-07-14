@@ -78,4 +78,15 @@ public static class Utility
         }
         return Path.Combine(DataFilePath, filename);
     }
+
+    public static string FormatTime(float seconds)
+    {
+        string time = "";
+        int second = (int)seconds;
+        int mills = (int)((seconds - second) * 10);
+        time += second;
+        time += ".";
+        time += mills;
+        return time;
+    }
 }

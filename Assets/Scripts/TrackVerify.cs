@@ -1,16 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public static class TrackVerify 
 {
-    public static bool[,] CheckTrack(float[,] heightMap, float minY, float maxY)
+    public static System.Action<Track> callBack;
+
+    public static bool[,] CheckTrack(float[,] heightMap, float minY, float maxY, System.Action<Track> callBack)
     {
+        TrackVerify.callBack = callBack;
+
         bool valid = true;
 
         int height = heightMap.GetLength(1);
         int width = heightMap.GetLength(0);
-        
+
+        node[,] obstacleNodes = new node[width, height];
         node[,] trackNodes = new node[width, height];
         bool[,] trackNodeBools = new bool[width, height];
         for (int x = 0; x < width; x += 1)
@@ -24,76 +30,33 @@ public static class TrackVerify
                     trackNodes[x, y] = trackNode;
                     trackNodeBools[x, y] = true;
                 }
-            }
-        }
-
-
-
-        for (int x = 0; x < width; x += 1)
-        {
-            for (int y = 0; y < height; y += 1)
-            {
-                if (ValidHeight(heightMap[x, y], minY, maxY))
-                {
-                    node trackNode = trackNodes[x, y];
-                    if(y > 0 && ValidHeight(heightMap[x,y-1], minY, maxY)){
-                        trackNode.up = trackNodes[x, y - 1];
-                    }
-                    if(x < width -1 && ValidHeight(heightMap[x + 1, y], minY, maxY))
-                    {
-                        trackNode.right = trackNodes[x + 1, y];
-                    }
-                    if (y < height - 1 && ValidHeight(heightMap[x, y + 1], minY, maxY))
-                    {
-                        trackNode.down = trackNodes[x, y + 1];
-                    }
-                    if (x > 0 && ValidHeight(heightMap[x - 1, y], minY, maxY))
-                    {
-                        trackNode.left = trackNodes[x - 1, y];
-                    }
-                }
                 else
                 {
-
+                    node obstacleNode = new node(new Vector2Int(x, y));
+                    obstacleNodes[x, y] = obstacleNode;
                 }
             }
         }
 
-        List<List<node>> loops = GetLoops(trackNodes);
-        foreach(List<node> loop in loops)
-        {
-            string loopList = "";
-            foreach(node square in loop)
-            {
-                loopList += square.pos + " ";
-            }
-            Debug.Log(loopList);
-        }
+        Track track = new Track();
+        track.GenerateTrack(heightMap, minY, maxY, trackNodes, obstacleNodes);
+
 
         return trackNodeBools;
     }
+    
 
-    static bool ValidHeight(float height, float minY, float maxY)
+    
+
+    public static bool ValidHeight(float height, float minY, float maxY)
     {
         if (height >= minY && height <= maxY) return true;
         else return false;
     }
 
-    class node
-    {
-        public Vector2Int pos;
-        public node up;
-        public node right;
-        public node down;
-        public node left;
+    
 
-        public node(Vector2Int pos)
-        {
-            this.pos = pos;
-        }
-    }
-
-    static List<List<node>> GetLoops(node[,] trackNodes)
+    public static List<List<node>> GetLoops(node[,] trackNodes)
     {
         List<List<node>> loops = new List<List<node>>();
         List<node> toVisit = GetNodes(trackNodes);
@@ -143,4 +106,116 @@ public static class TrackVerify
         }
         return toVisit;
     }
+}
+public class node
+{
+    public Vector2Int pos;
+    public node up;
+    public node right;
+    public node down;
+    public node left;
+
+    public node(Vector2Int pos)
+    {
+        this.pos = pos;
+    }
+}
+
+public class Track
+{
+    public double buildTime;
+    public List<List<node>> track;
+    public List<List<node>> obstacles;
+    float[,] heightMap;
+    float minY, maxY;
+    node[,] trackNodes, obstacleNodes;
+    System.DateTime buildStart;
+
+    public void GenerateTrack(float[,] heightMap, float minY, float maxY, node[,] trackNodes, node[,] obstacleNodes)
+    {
+        this.heightMap = heightMap;
+        this.minY = minY;
+        this.maxY = maxY;
+        this.trackNodes = trackNodes;
+        this.obstacleNodes = obstacleNodes;
+
+        Thread thread = new Thread(GenerateTrack);
+        thread.Start();
+    }
+
+    void GenerateTrack()
+    {
+        buildStart = System.DateTime.Now ;
+        Debug.Log(System.DateTime.Now);
+        int height = heightMap.GetLength(1);
+        int width = heightMap.GetLength(0);
+
+        for (int x = 0; x < width; x += 1)
+        {
+            for (int y = 0; y < height; y += 1)
+            {
+                if (TrackVerify.ValidHeight(heightMap[x, y], minY, maxY))
+                {
+                    node trackNode = trackNodes[x, y];
+                    if (y > 0 && TrackVerify.ValidHeight(heightMap[x, y - 1], minY, maxY))
+                    {
+                        trackNode.up = trackNodes[x, y - 1];
+                    }
+                    if (x < width - 1 && TrackVerify.ValidHeight(heightMap[x + 1, y], minY, maxY))
+                    {
+                        trackNode.right = trackNodes[x + 1, y];
+                    }
+                    if (y < height - 1 && TrackVerify.ValidHeight(heightMap[x, y + 1], minY, maxY))
+                    {
+                        trackNode.down = trackNodes[x, y + 1];
+                    }
+                    if (x > 0 && TrackVerify.ValidHeight(heightMap[x - 1, y], minY, maxY))
+                    {
+                        trackNode.left = trackNodes[x - 1, y];
+                    }
+                }
+                else
+                {
+                    node obstacleNode = obstacleNodes[x, y];
+                    if (y > 0 && !TrackVerify.ValidHeight(heightMap[x, y - 1], minY, maxY))
+                    {
+                        obstacleNode.up = obstacleNodes[x, y - 1];
+                    }
+                    if (x < width - 1 && !TrackVerify.ValidHeight(heightMap[x + 1, y], minY, maxY))
+                    {
+                        obstacleNode.right = obstacleNodes[x + 1, y];
+                    }
+                    if (y < height - 1 && !TrackVerify.ValidHeight(heightMap[x, y + 1], minY, maxY))
+                    {
+                        obstacleNode.down = obstacleNodes[x, y + 1];
+                    }
+                    if (x > 0 && !TrackVerify.ValidHeight(heightMap[x - 1, y], minY, maxY))
+                    {
+                        obstacleNode.left = obstacleNodes[x - 1, y];
+                    }
+                }
+            }
+        }
+        Debug.Log("Checking for track " + System.DateTime.Now);
+        List<List<node>> loops = TrackVerify.GetLoops(trackNodes);
+        Debug.Log("Checking for obstacles " + System.DateTime.Now);
+        List<List<node>> obstacles = TrackVerify.GetLoops(obstacleNodes);
+        foreach (List<node> loop in loops)
+        {
+            string loopList = "";
+            foreach (node square in loop)
+            {
+                loopList += square.pos + " ";
+            }
+            Debug.Log(loopList);
+        }
+
+        //Track track = new Track();
+        track = loops;
+        //obstacles = obstacles;
+        buildTime = (System.DateTime.Now - buildStart).TotalSeconds;
+        //Debug.Log(System.DateTime.Now + " " + (System.DateTime.Now - buildStart).TotalSeconds + " " + buildTime);
+        TrackVerify.callBack(this);
+    }
+
 }

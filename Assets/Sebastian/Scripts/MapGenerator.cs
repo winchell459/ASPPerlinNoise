@@ -97,10 +97,10 @@ namespace Sebastian
             }
             if (debugLoops)
             {
-                bool[,] aspTrackBoard = TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY);
+                bool[,] aspTrackBoard = TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY,TrackGenerateCallback);
                 aspMemory.SetData( aspTrackBoard );
                 Utility.CreateFile(aspMemory.GetASCIIMap(), "");
-                Debug.Log($"{aspTrackBoard.GetLength(0)} {aspTrackBoard.GetLength(1)}");
+                //Debug.Log($"{aspTrackBoard.GetLength(0)} {aspTrackBoard.GetLength(1)}");
             }
             //visualize possible track
 
@@ -194,6 +194,16 @@ namespace Sebastian
             if (octaves < 0) octaves = 0;
 
             GenerateFalloff();
+        }
+
+        public void TrackGenerateCallback(Track track)
+        {
+            Debug.Log($"buildTime: {track.buildTime}");
+            //foreach(List<node> obstacle in track.obstacles)
+            //{
+            //    Debug.Log($"obstacle.Count {obstacle.Count}");
+            //}
+
         }
     }
 }

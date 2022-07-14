@@ -11,7 +11,7 @@ namespace Sebastian
             Texture2D texture = new Texture2D(width, height);
             texture.filterMode = FilterMode.Point;
             texture.wrapMode = TextureWrapMode.Clamp;
-            Debug.Log($"{width} {height} {colorMap.Length}");
+            //Debug.Log($"{width} {height} {colorMap.Length}");
             texture.SetPixels(colorMap);
             texture.Apply();
             return texture;
