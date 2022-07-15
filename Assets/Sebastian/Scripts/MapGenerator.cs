@@ -97,9 +97,9 @@ namespace Sebastian
             }
             if (debugLoops)
             {
-                bool[,] aspTrackBoard = TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY,TrackGenerateCallback);
-                aspMemory.SetData( aspTrackBoard );
-                Utility.CreateFile(aspMemory.GetASCIIMap(), "");
+                TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY,TrackGenerateCallback);
+                //aspMemory.SetData( aspTrackBoard );
+                //Utility.CreateFile(aspMemory.GetASCIIMap(), "");
                 //Debug.Log($"{aspTrackBoard.GetLength(0)} {aspTrackBoard.GetLength(1)}");
             }
             //visualize possible track
@@ -203,7 +203,15 @@ namespace Sebastian
             //{
             //    Debug.Log($"obstacle.Count {obstacle.Count}");
             //}
-
+            foreach (List<node> loop in track.track)
+            {
+                string loopList = "";
+                foreach (node square in loop)
+                {
+                    loopList += square.pos + " ";
+                }
+                Debug.Log(loopList);
+            }
         }
     }
 }
