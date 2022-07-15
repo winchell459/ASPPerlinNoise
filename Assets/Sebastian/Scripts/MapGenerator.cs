@@ -97,6 +97,7 @@ namespace Sebastian
             }
             if (debugLoops)
             {
+                trackReady = false;
                 TrackVerify.CheckTrack(noiseMap, trackMinY, trackMaxY,TrackGenerateCallback);
                 //aspMemory.SetData( aspTrackBoard );
                 //Utility.CreateFile(aspMemory.GetASCIIMap(), "");
@@ -196,8 +197,12 @@ namespace Sebastian
             GenerateFalloff();
         }
 
+        public Track track;
+        public bool trackReady;
         public void TrackGenerateCallback(Track track)
         {
+            this.track = track;
+            trackReady = true;
             Debug.Log($"buildTime: {track.buildTime}");
             //foreach(List<node> obstacle in track.obstacles)
             //{

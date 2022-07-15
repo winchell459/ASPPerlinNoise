@@ -149,7 +149,7 @@ public class Track
         Debug.Log("Checking for track " + System.DateTime.Now);
         List<List<node>> loops = GetChunks(trackNodes);
         Debug.Log("Checking for obstacles " + System.DateTime.Now);
-        obstacles = GetChunks(obstacleNodes);
+        //obstacles = GetChunks(obstacleNodes);
         
 
         //Track track = new Track();
@@ -171,13 +171,13 @@ public class Track
     public static List<List<node>> GetChunks(node[,] trackNodes)
     {
         List<List<node>> chunks = new List<List<node>>();
-        Debug.Log("GetNodes");
+        //Debug.Log("GetNodes");
         List<node> toVisit = GetNodes(trackNodes);
         int count = 0;
         while (toVisit.Count > 0)
         {
             count++;
-            Debug.Log(count);
+            //Debug.Log(count);
             List<node> chunk = new List<node>();
             chunks.Add(chunk);
             GetNeighbors(toVisit[0], trackNodes, chunk, toVisit);
@@ -189,6 +189,7 @@ public class Track
     {
         chunk.Add(current);
         toVisit.Remove(current);
+        //Debug.Log($"GetNeighbors chunk.Count: {chunk.Count} {chunk.Capacity} toVist.Count {toVisit.Count} {toVisit.Capacity}");
         if (current.up != null && !chunk.Contains(current.up))
         {
             chunk.Add(current.up);
@@ -209,6 +210,7 @@ public class Track
             chunk.Add(current.left);
             GetNeighbors(current.left, chunkNodes, chunk, toVisit);
         }
+        //Debug.Log("GotNeighbors");
     }
 
     static List<node> GetNodes(node[,] trackNodes)

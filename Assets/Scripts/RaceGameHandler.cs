@@ -14,6 +14,7 @@ public class RaceGameHandler : MonoBehaviour
     public float startCountdown = 3;
     public Text countdownText;
     public Camera mainCamera;
+    public Transform cameraRig;
     public Sebastian.MapGenerator mapGenerator;
     public bool newBuild;
     public bool hasAI;
@@ -57,7 +58,10 @@ public class RaceGameHandler : MonoBehaviour
         if (raceStarted)
         {
             player.gameObject.SetActive(true);
-            mainCamera.transform.parent = player;
+
+            cameraRig.transform.parent = player;
+            cameraRig.transform.localPosition = Vector3.zero;
+
             if(hasAI) ai.gameObject.SetActive(true);
         }
     }
@@ -70,6 +74,18 @@ public class RaceGameHandler : MonoBehaviour
         mapGenerator.AddMesh();
         while (countdown > 0)
         {
+            if (mapGenerator.trackReady)
+            {
+                mapGenerator.trackReady = false;
+                List<node> track = mapGenerator.track.track[0];
+                foreach(List<node> loop in mapGenerator.track.track)
+                {
+                    if (loop.Count > track.Count) track = loop;
+                }
+
+                Vector2Int spawn = track[Random.Range(0, track.Count)].pos * 5 ;
+                player.position = new Vector3(spawn.x, player.position.y, -spawn.y) + new Vector3Int(-495 / 2,0, 495 / 2);
+            }
             countdown = Mathf.Clamp(countdown - Time.deltaTime, 0, float.MaxValue);
             
             countdownText.text = Utility.FormatTime(countdown);
