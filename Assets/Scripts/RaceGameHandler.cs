@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class RaceGameHandler : MonoBehaviour
 {
     public GameObject pauseMenuPanel;
@@ -18,6 +19,8 @@ public class RaceGameHandler : MonoBehaviour
     public Sebastian.MapGenerator mapGenerator;
     public bool newBuild;
     public bool hasAI;
+
+
 
 #if UNITY_ANDROID
     private bool pauseTrigger = false;
@@ -51,6 +54,9 @@ public class RaceGameHandler : MonoBehaviour
             player.gameObject.SetActive(true);
 #if UNITY_ANDROID
             cameraRig.transform.position = new Vector3(player.position.x, cameraRig.transform.position.y, player.position.z);
+
+
+
 #else
             cameraRig.transform.parent = player;
             cameraRig.transform.localPosition = Vector3.zero;
