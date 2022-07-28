@@ -1,6 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
+using UnityStandardAssets.Vehicles.Car;
 
+//namespace UnityEngine.XR.Interaction.Toolkit
 namespace UnityStandardAssets.Vehicles.Car
 {
     [RequireComponent(typeof (CarController))]
@@ -8,6 +13,9 @@ namespace UnityStandardAssets.Vehicles.Car
     {
         private CarController m_Car; // the car controller we want to use
 
+
+        [SerializeField] public InputActionProperty leftHand;
+        [SerializeField] public InputActionProperty rightHand;
 
         private void Awake()
         {
@@ -18,9 +26,18 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void FixedUpdate()
         {
+#if UNITY_ANDROID
+            float h = 0;
+            float v = 0;
+            Vector2 leftHandValue = leftHand.action?.ReadValue<Vector2>() ?? Vector2.zero;
+            Vector2 rightHandValue = rightHand.action?.ReadValue<Vector2>() ?? Vector2.zero;
+            v = leftHandValue.y;
+            h = rightHandValue.x;
+#else
             // pass the input to the car!
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
+#endif
 #if !MOBILE_INPUT
             float handbrake = Input.GetAxis("Jump");
             m_Car.Move(h, v, v, handbrake);

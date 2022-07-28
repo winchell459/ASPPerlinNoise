@@ -19,6 +19,13 @@ public class RaceGameHandler : MonoBehaviour
     public bool newBuild;
     public bool hasAI;
 
+#if UNITY_ANDROID
+    private bool pauseTrigger = false;
+#else
+    private bool pauseTrigger { get { return Input.GetKeyDown(KeyCode.Escape); } }
+#endif 
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +46,21 @@ public class RaceGameHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (raceStarted)
+        {
+            player.gameObject.SetActive(true);
+#if UNITY_ANDROID
+            cameraRig.transform.position = new Vector3(player.position.x, cameraRig.transform.position.y, player.position.z);
+#else
+            cameraRig.transform.parent = player;
+            cameraRig.transform.localPosition = Vector3.zero;
+#endif
+
+
+            if (hasAI) ai.gameObject.SetActive(true);
+        }
+
+        if (pauseTrigger)
         {
             if (paused)
             {
@@ -55,15 +76,7 @@ public class RaceGameHandler : MonoBehaviour
             }
         }
 
-        if (raceStarted)
-        {
-            player.gameObject.SetActive(true);
-
-            cameraRig.transform.parent = player;
-            cameraRig.transform.localPosition = Vector3.zero;
-
-            if(hasAI) ai.gameObject.SetActive(true);
-        }
+        
     }
 
     IEnumerator CountdownTimer(float countdown, float startBuffer, float endBuffer)
