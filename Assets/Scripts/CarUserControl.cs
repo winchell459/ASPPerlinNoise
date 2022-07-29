@@ -22,16 +22,19 @@ using UnityStandardAssets.Vehicles.Car;
         }
 
 
-        private void FixedUpdate()
-        {
-            float h = inputManager.horizontal();
-            float v = inputManager.gas();
+    private void FixedUpdate()
+    {
+        float steering = inputManager.horizontal();
+        float accel = inputManager.gas();
+        float footbreak = -inputManager.brake();
+
+        if (footbreak > 0.00001f && accel > 0.001f) accel = footbreak;
 
 #if !MOBILE_INPUT
-            float handbrake = Input.GetAxis("Jump");
+            
             m_Car.Move(h, v, v, handbrake);
 #else
-            m_Car.Move(h, v, v, 0f);
+            m_Car.Move(steering, accel, footbreak, 0f);
 #endif
         }
     }

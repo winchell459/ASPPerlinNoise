@@ -11,6 +11,7 @@ public class CameraRig : MonoBehaviour
     //[SerializeField] public InputActionProperty rightHand;
 
     public GameObject cameraHead, cameraRig;
+    public Transform playPos, pausedPos;
     [SerializeField] private bool active;
     public float zoomSpeed = 10;
     public float rotateSpeed = 10;
@@ -18,11 +19,14 @@ public class CameraRig : MonoBehaviour
     public float leftThreshold = 0.1f;
 
     public InputManager inputManager;
+    public RaceGameHandler rch;
+    private bool paused = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        playPos.position = cameraHead.transform.position;
+        playPos.parent = cameraHead.transform.parent;
     }
 
     // Update is called once per frame
@@ -34,6 +38,18 @@ public class CameraRig : MonoBehaviour
             float left = inputManager.rotate();
             Zoom(right);
             if (leftThreshold < Mathf.Abs(left)) Pan(left);
+        }
+
+        if(rch.paused && !paused)
+        {
+            //move head to pausePos
+            cameraHead.transform.position = pausedPos.position;
+            paused = true;
+        }else if(!rch.paused && paused)
+        {
+            //move head to playPos
+            cameraHead.transform.position = playPos.position;
+            paused = false;
         }
 
     }

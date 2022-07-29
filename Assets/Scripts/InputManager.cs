@@ -16,9 +16,60 @@ using UnityEngine.InputSystem;
 #else
     bool vr = false;
 #endif
-        public bool pause()
+    bool leftHandGripDown = false, leftHandGripUp = false, leftHandGripPressed = false;
+    bool leftHandTriggerDown = false, leftHandTriggerUp = false, leftHandTriggerPressed = false;
+
+    private void Update()
+    {
+        if (vr)
         {
-            bool pressed = false;
+            float value =  leftHandGrip.action?.ReadValue<float>() ?? 0;
+            SetButton(value, ref leftHandGripDown, ref leftHandGripUp, ref leftHandGripPressed, 0);
+
+            SetButton(leftHandTrigger.action?.ReadValue<float>() ?? 0, ref leftHandTriggerDown, ref leftHandTriggerUp, ref leftHandTriggerPressed, 0);
+        }
+        else
+        {
+            
+        }
+    }
+
+    private void SetButton(float value, ref bool down, ref bool up, ref bool pressed, float threshold)
+    {
+        if (Mathf.Abs(value) > threshold)
+        {
+            if (!pressed)
+            {
+                down = true;
+            }
+            else
+            {
+                down = false;
+            }
+            up = false;
+            pressed = true;
+        }
+        else
+        {
+            if (pressed)
+            {
+                up = true;
+            }
+            else
+            {
+                up = false;
+            }
+            down = false;
+            pressed = false;
+        }
+    }
+    public bool UISelection()
+    {
+        return leftHandTriggerDown;
+    }
+    public bool pause()
+        {
+            bool pressed = leftHandGripDown;
 
             return pressed;
         }

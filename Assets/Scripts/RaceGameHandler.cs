@@ -82,6 +82,10 @@ public class RaceGameHandler : MonoBehaviour
             }
         }
 
+        if(paused && inputManager.UISelection())
+        {
+            RestartLevel();
+        }
         
     }
 
@@ -127,7 +131,7 @@ public class RaceGameHandler : MonoBehaviour
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void MainMenu()
     {
