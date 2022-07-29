@@ -19,11 +19,11 @@ public class RaceGameHandler : MonoBehaviour
     public Sebastian.MapGenerator mapGenerator;
     public bool newBuild;
     public bool hasAI;
-
+    public InputManager inputManager;
 
 
 #if UNITY_ANDROID
-    private bool pauseTrigger = false;
+    private bool pauseTrigger { get { return inputManager.pause(); } }
 #else
     private bool pauseTrigger { get { return Input.GetKeyDown(KeyCode.Escape); } }
 #endif 

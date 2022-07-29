@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-
+//using UnityEngine.InputSystem;
+//using InputManager;
 
 public class CameraRig : MonoBehaviour
 {
 
-    [SerializeField] public InputActionProperty leftHand;
-    [SerializeField] public InputActionProperty rightHand;
+    //[SerializeField] public InputActionProperty leftHand;
+    //[SerializeField] public InputActionProperty rightHand;
 
     public GameObject cameraHead, cameraRig;
     [SerializeField] private bool active;
@@ -16,6 +16,8 @@ public class CameraRig : MonoBehaviour
     public float rotateSpeed = 10;
     public bool invertRotate;
     public float leftThreshold = 0.1f;
+
+    public InputManager inputManager;
 
     // Start is called before the first frame update
     void Start()
@@ -28,17 +30,10 @@ public class CameraRig : MonoBehaviour
     {
         if (active)
         {
-#if UNITY_ANDROID
-
-            Vector2 leftHandValue = leftHand.action?.ReadValue<Vector2>() ?? Vector2.zero;
-            Vector2 rightHandValue = rightHand.action?.ReadValue<Vector2>() ?? Vector2.zero;
-            float right = rightHandValue.y;
-            float left = leftHandValue.x;
+            float right = inputManager.zoom();
+            float left = inputManager.rotate();
             Zoom(right);
-            if(leftThreshold < Mathf.Abs(left)) Pan(left);
-#else
-            
-#endif
+            if (leftThreshold < Mathf.Abs(left)) Pan(left);
         }
 
     }
