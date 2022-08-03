@@ -10,7 +10,7 @@ public class CameraRig : MonoBehaviour
     //[SerializeField] public InputActionProperty leftHand;
     //[SerializeField] public InputActionProperty rightHand;
 
-    public GameObject cameraHead, cameraRig;
+    public GameObject cameraHead, cameraRig, cameraSwivel;
     public Transform playPos, pausedPos;
     [SerializeField] private bool active;
     public float zoomSpeed = 10;
@@ -21,14 +21,19 @@ public class CameraRig : MonoBehaviour
     public InputManager inputManager;
     public RaceGameHandler rch;
     private bool paused = false;
+    [SerializeField] private bool followPlayerForward;
 
     // Start is called before the first frame update
     void Start()
     {
-        playPos.position = cameraHead.transform.position;
-        playPos.parent = cameraHead.transform.parent;
+        //playPos.position = cameraHead.transform.position;
+        //playPos.parent = cameraHead.transform.parent;
     }
-
+    private void FixedUpdate()
+    {
+        cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
+        if (!paused && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -38,21 +43,47 @@ public class CameraRig : MonoBehaviour
             float left = inputManager.rotate();
             Zoom(right);
             if (leftThreshold < Mathf.Abs(left)) Pan(left);
+
+            //cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
+            //if (!paused && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
         }
 
-        if(rch.paused && !paused)
+        if (rch.paused && !paused)
         {
             //move head to pausePos
-            cameraHead.transform.position = pausedPos.position;
+            cameraRig.transform.position = pausedPos.position;
+            cameraRig.transform.forward = Vector3.forward;
             paused = true;
-        }else if(!rch.paused && paused)
+            //followPlayerForward = !followPlayerForward;
+            
+        }
+        else if (!rch.paused && paused)
         {
             //move head to playPos
-            cameraHead.transform.position = playPos.position;
+            cameraRig.transform.position = playPos.position;
+            cameraRig.transform.forward = forward(playPos.forward);
             paused = false;
         }
 
+        if(!paused && inputManager.UISelection())
+        {
+            followPlayerForward = !followPlayerForward;
+            if (followPlayerForward)
+            {
+                Vector3 headForward = cameraSwivel.transform.forward;
+                cameraRig.transform.forward = forward(playPos.forward);
+                cameraSwivel.transform.forward = headForward;
+            }
+        }
     }
+
+    
+    
+    private Vector3 forward(Vector3 target)
+    {
+        return new Vector3(target.x, 0, target.z).normalized;
+    }
+
     private void Zoom(float delta)
     {
         Vector3 direction = cameraHead.transform.position - cameraRig.transform.position;
@@ -65,11 +96,11 @@ public class CameraRig : MonoBehaviour
     {
         if (invertRotate)
         {
-            cameraRig.transform.Rotate(Vector3.up * rotateSpeed * rotation * Time.deltaTime);
+            cameraSwivel.transform.Rotate(Vector3.up * rotateSpeed * rotation * Time.deltaTime);
         }
         else
         {
-            cameraRig.transform.Rotate(-Vector3.up * rotateSpeed * rotation * Time.deltaTime);
+            cameraSwivel.transform.Rotate(-Vector3.up * rotateSpeed * rotation * Time.deltaTime);
         }
         
     }

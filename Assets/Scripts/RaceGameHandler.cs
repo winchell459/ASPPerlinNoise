@@ -53,7 +53,7 @@ public class RaceGameHandler : MonoBehaviour
         {
             player.gameObject.SetActive(true);
 #if UNITY_ANDROID
-            cameraRig.transform.position = new Vector3(player.position.x, cameraRig.transform.position.y, player.position.z);
+            //cameraRig.transform.position = new Vector3(player.position.x, cameraRig.transform.position.y, player.position.z);
 
 
 
