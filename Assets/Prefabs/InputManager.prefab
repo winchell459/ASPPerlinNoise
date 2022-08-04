@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1850397650632661494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1850397650632661488}
+  - component: {fileID: 1850397650632661495}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1850397650632661488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850397650632661494}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 85.49875, y: 24.348751, z: -76.49875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1850397650632661495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850397650632661494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79634a52b26468f498a4649b0c90f321, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftHandTrigger:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Hand Trigger
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 401dc7f8-7add-422c-ac57-d3e6eccff463
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  leftHandGrip:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Hand Grip
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 5745c05a-2225-4a72-bd26-fd99f0845dd1
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 6558622148059887818, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  leftHandJoystick:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Left Hand Joystick
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 1130aff5-bc1a-49b0-9138-59710f86e52f
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 6972639530819350904, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightHandTrigger:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Hand Trigger
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 00cd4929-4d18-492f-8625-ffd498d25d83
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightHandGrip:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Hand Grip
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 79c93639-fe41-40ad-a762-92a2e6dcf640
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightHandJoystick:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Hand Joystick
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 32c96f65-3502-4f4f-b8f4-b0c6fde27582
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -6493913391331992944, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightHand:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Right Hand
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 3b1eb9ca-6518-4ed5-a902-784aab72279d
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  debugVR: 0

@@ -10,8 +10,9 @@ using UnityEngine.InputSystem;
         [SerializeField] private InputActionProperty leftHandTrigger, leftHandGrip, leftHandJoystick;
         [SerializeField] private InputActionProperty rightHandTrigger, rightHandGrip, rightHandJoystick, rightHand;
 
+    public bool debugVR = false;
 #if UNITY_ANDROID
-        bool vr = true;
+        bool vr = true ;
 
 #else
     bool vr = false;
@@ -21,7 +22,7 @@ using UnityEngine.InputSystem;
 
     private void Update()
     {
-        if (vr)
+        if (vr && !debugVR)
         {
             float value =  leftHandGrip.action?.ReadValue<float>() ?? 0;
             SetButton(value, ref leftHandGripDown, ref leftHandGripUp, ref leftHandGripPressed, 0);
@@ -67,6 +68,10 @@ using UnityEngine.InputSystem;
     {
         return leftHandTriggerDown;
     }
+    public bool UISelectionUp()
+    {
+        return leftHandTriggerUp;
+    }
     public bool pause()
         {
             bool pressed = leftHandGripDown;
@@ -76,7 +81,7 @@ using UnityEngine.InputSystem;
 
         public float gas()
         {
-            if (vr)
+            if (vr && !debugVR)
             {
                 return rightHandTrigger.action?.ReadValue<float>() ?? 0;
             }
@@ -88,7 +93,7 @@ using UnityEngine.InputSystem;
 
         public float brake()
         {
-            if (vr)
+            if (vr && !debugVR)
             {
                 return rightHandGrip.action?.ReadValue<float>() ?? 0;
             }
@@ -100,7 +105,7 @@ using UnityEngine.InputSystem;
 
         public float horizontal()
         {
-            if (vr)
+            if (vr && !debugVR)
             {
                 return leftHandJoystick.action?.ReadValue<Vector2>().x ?? 0;
             }
@@ -112,7 +117,7 @@ using UnityEngine.InputSystem;
 
         public float vertical()
         {
-            if (vr)
+            if (vr && !debugVR)
             {
                 return leftHandJoystick.action?.ReadValue<Vector2>().y ?? 0;
             }
@@ -124,7 +129,7 @@ using UnityEngine.InputSystem;
 
         public float rotate()
         {
-            if (vr)
+            if (vr && !debugVR)
             {
                 return rightHandJoystick.action?.ReadValue<Vector2>().x ?? 0;
             }
@@ -136,7 +141,7 @@ using UnityEngine.InputSystem;
 
         public float zoom()
         {
-            if (vr)
+            if (vr && !debugVR)
             {
                 return rightHandJoystick.action?.ReadValue<Vector2>().y ?? 0;
             }

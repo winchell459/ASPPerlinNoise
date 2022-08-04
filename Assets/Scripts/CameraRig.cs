@@ -23,6 +23,8 @@ public class CameraRig : MonoBehaviour
     private bool paused = false;
     [SerializeField] private bool followPlayerForward;
 
+    private Vector3 pauseHeadForward;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +35,11 @@ public class CameraRig : MonoBehaviour
     {
         cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
         if (!paused && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
+        else if (paused)
+        {
+            cameraRig.transform.position = pausedPos.position;
+            cameraSwivel.transform.forward = Vector3.forward;
+        }
     }
     // Update is called once per frame
     void Update()
@@ -52,20 +59,23 @@ public class CameraRig : MonoBehaviour
         {
             //move head to pausePos
             cameraRig.transform.position = pausedPos.position;
-            cameraRig.transform.forward = Vector3.forward;
+            cameraSwivel.transform.forward = Vector3.forward;
             paused = true;
             //followPlayerForward = !followPlayerForward;
-            
+
+            //pauseHeadForward = cameraSwivel.transform.forward;
         }
         else if (!rch.paused && paused)
         {
             //move head to playPos
             cameraRig.transform.position = playPos.position;
-            cameraRig.transform.forward = forward(playPos.forward);
+            cameraSwivel.transform.forward = forward(playPos.forward);
             paused = false;
+
+            //cameraSwivel.transform.forward = pauseHeadForward;
         }
 
-        if(!paused && inputManager.UISelection())
+        if(!paused && inputManager.UISelection() || inputManager.UISelectionUp())
         {
             followPlayerForward = !followPlayerForward;
             if (followPlayerForward)
