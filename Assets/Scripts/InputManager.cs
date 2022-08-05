@@ -90,9 +90,17 @@ using UnityEngine.InputSystem;
     }
     public bool pause()
         {
-            bool pressed = leftHandGripDown;
+        if (vr && !debugVR)
+        {
+            return leftHandGripDown;
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.Escape);
+        }
+            
 
-            return pressed;
+            
         }
 
         public float gas()

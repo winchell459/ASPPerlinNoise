@@ -7,13 +7,13 @@ using UnityEngine.UI;
 
 public class RaceGameHandler : MonoBehaviour
 {
-    public GameObject pauseMenuPanel;
+    public PauseMenu pauseMenu;
     public bool paused = false;
     public Transform player, ai;
     private bool raceStarted = false;
     private bool raceOver = false;
     public float startCountdown = 3;
-    public Text countdownText;
+    public HUDHandler hudHandler;
     public Camera mainCamera;
     public Transform cameraRig;
     public Sebastian.MapGenerator mapGenerator;
@@ -23,11 +23,9 @@ public class RaceGameHandler : MonoBehaviour
 
     public bool GetRaceStarted() { return raceStarted; }
 
-#if UNITY_ANDROID
+
     private bool pauseTrigger { get { return inputManager.pause(); } }
-#else
-    private bool pauseTrigger { get { return Input.GetKeyDown(KeyCode.Escape); } }
-#endif 
+
 
 
     // Start is called before the first frame update
@@ -35,7 +33,7 @@ public class RaceGameHandler : MonoBehaviour
     {
         if (!paused) Time.timeScale = 1;
         else Time.timeScale = 0;
-        pauseMenuPanel.SetActive(false);
+        pauseMenu.Pause(false);
         //
         StartCoroutine(CountdownTimer(startCountdown, 1, 3));
         if (newBuild)
@@ -72,28 +70,28 @@ public class RaceGameHandler : MonoBehaviour
             if (paused)
             {
                 Time.timeScale = 1;
-                pauseMenuPanel.SetActive(false);
+                pauseMenu.Pause(false);
                 paused = false;
             }
             else
             {
                 Time.timeScale = 0;
-                pauseMenuPanel.SetActive(true);
+                pauseMenu.Pause(true);
                 paused = true;
             }
         }
 
-        if(paused && inputManager.UISelection())
-        {
-            RestartLevel();
-        }
+        //if(paused && inputManager.UISelection())
+        //{
+        //    RestartLevel();
+        //}
         
     }
 
     IEnumerator CountdownTimer(float countdown, float startBuffer, float endBuffer)
     {
-        countdownText.text = countdown.ToString();
-        countdownText.gameObject.SetActive(true);
+        hudHandler.SetTimer(countdown.ToString());
+        hudHandler.DisplayTimer(true);
         yield return new WaitForSeconds(startBuffer);
         mapGenerator.AddMesh();
         while (countdown > 0)
@@ -112,12 +110,12 @@ public class RaceGameHandler : MonoBehaviour
             }
             countdown = Mathf.Clamp(countdown - Time.deltaTime, 0, float.MaxValue);
             
-            countdownText.text = Utility.FormatTime(countdown);
+            hudHandler.SetTimer( Utility.FormatTime(countdown));
             yield return null;
         }
         raceStarted = true;
         yield return new WaitForSeconds(endBuffer);
-        countdownText.gameObject.SetActive(false);
+        hudHandler.DisplayTimer(false);
     }
 
     public void ResetPlayerVertical()
