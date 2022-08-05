@@ -15,6 +15,7 @@ using UnityStandardAssets.Vehicles.Car;
         //[SerializeField] public InputActionProperty leftHand;
         //[SerializeField] public InputActionProperty rightHand;
         public InputManager inputManager;
+    public bool interruptCarUserControl;
         private void Awake()
         {
             // get the car controller
@@ -24,6 +25,7 @@ using UnityStandardAssets.Vehicles.Car;
 
     private void FixedUpdate()
     {
+        if (interruptCarUserControl) return;
         float steering = inputManager.horizontal();
         float accel = inputManager.gas();
         float footbreak = -inputManager.brake();

@@ -21,6 +21,7 @@ public class RaceGameHandler : MonoBehaviour
     public bool hasAI;
     public InputManager inputManager;
 
+    public bool GetRaceStarted() { return raceStarted; }
 
 #if UNITY_ANDROID
     private bool pauseTrigger { get { return inputManager.pause(); } }

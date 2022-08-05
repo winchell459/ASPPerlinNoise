@@ -19,13 +19,16 @@ using UnityEngine.InputSystem;
 #endif
     bool leftHandGripDown = false, leftHandGripUp = false, leftHandGripPressed = false;
     bool leftHandTriggerDown = false, leftHandTriggerUp = false, leftHandTriggerPressed = false;
+    bool rightHandTriggerDown = false, rightHandTriggerUp = false, rightHandTriggerPressed = false;
 
     private void Update()
     {
         if (vr && !debugVR)
         {
-            float value =  leftHandGrip.action?.ReadValue<float>() ?? 0;
-            SetButton(value, ref leftHandGripDown, ref leftHandGripUp, ref leftHandGripPressed, 0);
+           
+            SetButton(leftHandGrip.action?.ReadValue<float>() ?? 0, ref leftHandGripDown, ref leftHandGripUp, ref leftHandGripPressed, 0);
+            
+            SetButton(rightHandTrigger.action?.ReadValue<float>() ?? 0, ref rightHandTriggerDown, ref rightHandTriggerUp, ref rightHandTriggerPressed, 0);
 
             SetButton(leftHandTrigger.action?.ReadValue<float>() ?? 0, ref leftHandTriggerDown, ref leftHandTriggerUp, ref leftHandTriggerPressed, 0);
         }
@@ -63,6 +66,19 @@ using UnityEngine.InputSystem;
             down = false;
             pressed = false;
         }
+    }
+
+    public bool PlayerSelectionDown()
+    {
+        return rightHandTriggerDown;
+    }
+    public bool PlayerSelection()
+    {
+        return rightHandTriggerPressed;
+    }
+    public bool PlayerSelectionUp()
+    {
+        return rightHandTriggerUp;
     }
     public bool UISelection()
     {

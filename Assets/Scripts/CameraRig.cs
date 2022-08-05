@@ -24,6 +24,7 @@ public class CameraRig : MonoBehaviour
     [SerializeField] private bool followPlayerForward;
 
     private Vector3 pauseHeadForward;
+    public bool interruptCameraRig;
 
     // Start is called before the first frame update
     void Start()
@@ -33,9 +34,9 @@ public class CameraRig : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
-        if (!paused && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
-        else if (paused)
+        if(!interruptCameraRig) cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
+        if ((rch.GetRaceStarted() && !paused) && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
+        else if (paused || !rch.GetRaceStarted())
         {
             cameraRig.transform.position = pausedPos.position;
             cameraSwivel.transform.forward = Vector3.forward;
