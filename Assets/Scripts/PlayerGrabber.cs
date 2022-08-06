@@ -18,6 +18,8 @@ public class PlayerGrabber : MonoBehaviour
     public LayerMask layerMask;
 
     public bool debugging;
+
+    public VegetationSelection vegetationSelection;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,9 @@ public class PlayerGrabber : MonoBehaviour
                     hook.connectedBody = player.GetComponent<Rigidbody>();
                     radius = Vector3.Distance(player.transform.position, grabber.position);
                     //player.GetComponent<Rigidbody>().useGravity = false;
+                }else if (hit.transform.CompareTag("Track"))
+                {
+                    Instantiate(vegetationSelection.Random()).transform.position = hit.point;
                 }
             }
         }
@@ -79,5 +84,16 @@ public class PlayerGrabber : MonoBehaviour
             //player.GetComponent<Rigidbody>().useGravity = !player.GetComponent<Rigidbody>().useGravity;
         }
 
+    }
+}
+
+[System.Serializable]
+public class VegetationSelection
+{
+    public GameObject[] prefab;
+    public GameObject Random()
+    {
+        int index = UnityEngine.Random.Range(0, prefab.Length);
+        return prefab[index];
     }
 }
