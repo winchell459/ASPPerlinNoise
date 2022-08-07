@@ -99,7 +99,7 @@ public class PlayerGrabber : MonoBehaviour
                         if (placingPlayer) car = player.transform;
                         else if (placingAI) car = ai.transform;
                         car.position = hit.point;
-                        gameHandler.ResetPlayerVertical(car);
+                        //gameHandler.ResetPlayerVertical(car);
                     }
                 }
                 placingAI = false;
@@ -146,7 +146,7 @@ public class VegetationSelection
 {
     public GameObject[] prefab;
     [SerializeField]
-    public RangeAttribute scaleMultiplierRange = new RangeAttribute(0.5f, 2);
+    public RangeAttribute scaleMultiplierRange = new RangeAttribute(2.5f, 10);
     public GameObject Random()
     {
         int index = UnityEngine.Random.Range(0, prefab.Length);
