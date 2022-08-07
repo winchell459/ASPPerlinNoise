@@ -10,7 +10,7 @@ public class RaceGameHandler : MonoBehaviour
     public PauseMenu pauseMenu;
     public bool paused = false;
     public Transform player, ai;
-    private bool raceStarted = false;
+    [SerializeField]private bool raceStarted = false;
     private bool raceOver = false;
     public float startCountdown = 3;
     public HUDHandler hudHandler;
@@ -26,23 +26,31 @@ public class RaceGameHandler : MonoBehaviour
 
     private bool pauseTrigger { get { return inputManager.pause(); } }
 
-
+    public float trackHeight;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (!paused) Time.timeScale = 1;
+        trackHeight = player.position.y;
+        //StartLevel();
+        GenerateMap(mapGenerator.seed);
+    }
+
+    public void StartLevel()
+    {
+        raceStarted = false;
+        if (!paused)
+        {
+            Time.timeScale = 1;
+        }
         else Time.timeScale = 0;
-        pauseMenu.Pause(false);
+        pauseMenu.Pause(paused);
         //
         StartCoroutine(CountdownTimer(startCountdown, 1, 3));
         if (newBuild)
         {
-            mapGenerator.seed = Random.Range(0, 10000);
-            mapGenerator.GenerateMap();
-            //mapGenerator.AddMesh();
+            GenerateMap(true);
         }
-
     }
 
     // Update is called once per frame
@@ -96,7 +104,7 @@ public class RaceGameHandler : MonoBehaviour
         mapGenerator.AddMesh();
         while (countdown > 0)
         {
-            if (mapGenerator.trackReady)
+            if (mapGenerator.trackReady && mapGenerator.debugLoops)
             {
                 mapGenerator.trackReady = false;
                 List<node> track = mapGenerator.track.track[0];
@@ -105,8 +113,8 @@ public class RaceGameHandler : MonoBehaviour
                     if (loop.Count > track.Count) track = loop;
                 }
 
-                Vector2Int spawn = track[Random.Range(0, track.Count)].pos * 5 ;
-                player.position = new Vector3(spawn.x, player.position.y, -spawn.y) + new Vector3Int(-495 / 2,0, 495 / 2);
+                RandomPlayerPlacement(player, track);
+                if (hasAI) RandomPlayerPlacement(ai, track);
             }
             countdown = Mathf.Clamp(countdown - Time.deltaTime, 0, float.MaxValue);
             
@@ -118,19 +126,25 @@ public class RaceGameHandler : MonoBehaviour
         hudHandler.DisplayTimer(false);
     }
 
-    public void ResetPlayerVertical()
+    public void RandomPlayerPlacement(Transform player, List<node> track)
     {
-
+        Vector2Int spawn = track[Random.Range(0, track.Count)].pos * 5;
+        player.position = new Vector3(spawn.x, trackHeight, -spawn.y) + new Vector3Int(-495 / 2, 0, 495 / 2);
     }
 
-    public void ResetAIVertical()
+    public void ResetPlayerVertical(Transform player)
     {
-
+        player.position = new Vector3(player.position.x, trackHeight, player.position.y);
+        player.up = Vector3.up;
     }
+
+    
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        FindObjectOfType<PlayerGrabber>().ClearVegetation();
+        StartLevel();
     }
     public void MainMenu()
     {
@@ -140,5 +154,16 @@ public class RaceGameHandler : MonoBehaviour
     public void RebuildMesh()
     {
         mapGenerator.AddMesh();
+    }
+
+    public void GenerateMap(bool randomSeed)
+    {
+        mapGenerator.seed = Random.Range(0, 10000);
+        mapGenerator.GenerateMap();
+    }
+    public void GenerateMap(int seed)
+    {
+        mapGenerator.seed = seed;
+        mapGenerator.GenerateMap();
     }
 }

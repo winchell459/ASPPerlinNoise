@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Track
+  - Vegetation
+  - AI
   layers:
   - Default
   - TransparentFX
@@ -14,7 +16,7 @@ TagManager:
   - UI
   - Player
   - Track
-  - 
+  - Obstacle
   - 
   - 
   - 
