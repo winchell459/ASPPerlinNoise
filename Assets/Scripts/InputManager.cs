@@ -82,10 +82,12 @@ using UnityEngine.InputSystem;
     }
     public bool UISelection()
     {
+        if (debugVR) return Input.GetKeyDown(KeyCode.RightControl);
         return leftHandTriggerDown;
     }
     public bool UISelectionUp()
     {
+        if (debugVR) return Input.GetKeyUp(KeyCode.RightControl);
         return leftHandTriggerUp;
     }
     public bool pause()

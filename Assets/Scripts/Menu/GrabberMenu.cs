@@ -19,5 +19,6 @@ public class GrabberMenu : MonoBehaviour
         placingAI = true;
         FindObjectOfType<PauseMenu>().HideMenus(true);
         playerGrabber.placingAI = placingAI;
+        playerGrabber.ai.GetComponent<AIFollow>().RestartTrack();
     }
 }
