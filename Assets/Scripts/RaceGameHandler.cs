@@ -134,7 +134,7 @@ public class RaceGameHandler : MonoBehaviour
 
     public void ResetPlayerVertical(Transform player)
     {
-        player.position = new Vector3(player.position.x, trackHeight, player.position.y);
+        player.position = new Vector3(player.position.x, trackHeight, player.position.z);
         player.up = Vector3.up;
     }
 

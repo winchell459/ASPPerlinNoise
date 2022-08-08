@@ -99,6 +99,7 @@ public class PlayerGrabber : MonoBehaviour
                         if (placingPlayer) car = player.transform;
                         else if (placingAI) car = ai.transform;
                         car.position = hit.point;
+                        if (placingAI) car.GetComponent<AIFollow>().RestartTrack();
                         //gameHandler.ResetPlayerVertical(car);
                     }
                 }
