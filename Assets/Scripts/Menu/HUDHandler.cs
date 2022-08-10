@@ -16,4 +16,10 @@ public class HUDHandler : MonoBehaviour
     {
         debugText.gameObject.SetActive(display);
     }
+
+    public void Debug(string message)
+    {
+        debugText.gameObject.SetActive(true);
+        debugText.text += message + "\n";
+    }
 }

@@ -67,7 +67,7 @@ public class PlayerGrabber : MonoBehaviour
                     hook.connectedBody = ai.GetComponent<Rigidbody>();
                     radius = Vector3.Distance(ai.transform.position, grabber.position);
                 }
-                else if (hit.transform.CompareTag("Track"))
+                else if (hit.transform.CompareTag("Track") && FindObjectOfType<CameraRig>().followType != CameraRig.FollowTypes.car)
                 {
                     GameObject vegetation = Instantiate(vegetationSelection.Random());
                     vegetation.transform.position = hit.point;

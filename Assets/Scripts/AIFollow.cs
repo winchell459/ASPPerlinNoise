@@ -102,6 +102,7 @@ public class AIFollow : MonoBehaviour
         waypoint.position = target.position;
 
         waypoint.name = $"waypoint {(int)target.position.x}, {(int)target.position.z}";
+        FindObjectOfType<HUDHandler>().Debug(waypoint.name);
         return waypoint;
     }
 }

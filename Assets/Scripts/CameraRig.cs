@@ -11,7 +11,8 @@ public class CameraRig : MonoBehaviour
     //[SerializeField] public InputActionProperty rightHand;
 
     public GameObject cameraHead, cameraRig, cameraSwivel;
-    public Transform playPos, pausedPos;
+    public Transform playPos { get { return getPlayerPos(); } }
+    public Transform carPos, pausedPos, aiPos;
     [SerializeField] private bool active;
     public float zoomSpeed = 10;
     public float rotateSpeed = 10;
@@ -25,6 +26,27 @@ public class CameraRig : MonoBehaviour
 
     private Vector3 pauseHeadForward;
     public bool interruptCameraRig;
+
+    public FollowTypes followType;
+    public enum FollowTypes
+    {
+        car,
+        ai,
+        free
+    }
+    Transform getPlayerPos()
+    {
+        switch (followType)
+        {
+            case FollowTypes.car:
+                return carPos;
+
+            case FollowTypes.ai:
+                return aiPos;
+            default:
+                return pausedPos;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
