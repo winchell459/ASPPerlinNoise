@@ -8,7 +8,7 @@ public class AIFollow : MonoBehaviour
     public Transform waypointCircuit;
     public bool following;
     public bool trackComplete;
-    [SerializeField] private List<Transform> track = new List<Transform>();
+    [SerializeField] private List<Checkpoint> track = new List<Checkpoint>();
     public float followRange = 5;
     public float waypointDistance = 10;
     public float waypointVelocity = 1;
@@ -17,6 +17,9 @@ public class AIFollow : MonoBehaviour
     private float lastWaypointSetTime;
 
     public bool reversingTrack;
+    private List<Checkpoint> waypointPool = new List<Checkpoint>();
+    public Checkpoint checkpointPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +29,7 @@ public class AIFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!trackComplete && !following &&  Vector3.Distance(transform.position, target.position) < followRange && Vector3.Distance(track[track.Count - 1].position, target.position) <= waypointDistance)
+        if(!trackComplete && !following &&  Vector3.Distance(transform.position, target.position) < followRange && Vector3.Distance(track[track.Count - 1].transform.position, target.position) <= waypointDistance)
         {
             following = true;
         }else if(following && !trackComplete && Vector3.Distance(transform.position, target.position) > followRange)
@@ -38,13 +41,13 @@ public class AIFollow : MonoBehaviour
         if (following)
         {
             waypointCircuit.position = target.position;
-            if(Vector3.Distance(track[track.Count - 1].position, target.position) > waypointDistance)
+            if(Vector3.Distance(track[track.Count - 1].transform.position, target.position) > waypointDistance)
             {
-                track.Add(GetWaypoint(waypointCircuit));
+                track.Add(GetWaypoint(waypointCircuit, false));
                 waypointIndex += 1;
             }
 
-            if(track.Count > 20 && Vector3.Distance(track[0].position, waypointCircuit.position) <= waypointDistance)
+            if(track.Count > 20 && Vector3.Distance(track[0].transform.position, waypointCircuit.position) <= waypointDistance)
             {
                 following = false;
                 trackComplete = true;
@@ -53,7 +56,7 @@ public class AIFollow : MonoBehaviour
         }
         else
         {
-            Transform current = track[waypointIndex];
+            Checkpoint current = track[waypointIndex];
             int nextIndex = waypointIndex;
             if (trackComplete) nextIndex = (nextIndex + 1) % track.Count;
             else if (!trackComplete)
@@ -78,31 +81,48 @@ public class AIFollow : MonoBehaviour
                 }
             }
 
-            if(Vector3.Distance(transform.position, current.position) < waypointDistance)
+            if(Vector3.Distance(transform.position, current.transform.position) < waypointDistance)
             {
                 current = track[nextIndex];
                 waypointIndex = nextIndex;
 
             }
-            waypointCircuit.position = current.position;
+            waypointCircuit.position = current.transform.position;
         }
     }
 
     public void RestartTrack()
     {
-        track.Clear();
-        track.Add(GetWaypoint(transform));
+        foreach(Checkpoint checkpoint in track)
+        {
+            checkpoint.Deactivate();
+            track.Remove(checkpoint);
+            waypointPool.Add(checkpoint);
+        }
+        track.Add(GetWaypoint(transform, true));
         following = false;
         trackComplete = false;
     }
-    private Transform GetWaypoint(Transform target)
+    private Checkpoint GetWaypoint(Transform target, bool start)
     {
         lastWaypointSetTime = Time.time;
-        Transform waypoint = new GameObject().transform;
-        waypoint.position = target.position;
+
+        Checkpoint waypoint;
+        if(waypointPool.Count > 0)
+        {
+            waypoint = waypointPool[0];
+            waypointPool.RemoveAt(0);
+        }
+        else
+        {
+            waypoint = Instantiate(checkpointPrefab);
+        }
+        waypoint.transform.position = target.position;
+
+        waypoint.Activate(start);
 
         waypoint.name = $"waypoint {(int)target.position.x}, {(int)target.position.z}";
-        FindObjectOfType<HUDHandler>().Debug(waypoint.name);
+
         return waypoint;
     }
 }
