@@ -13,7 +13,17 @@ public class PerlinNoiseMenu : MonoBehaviour
         perlinNoisePanel.SetActive(active);
     }
 
+    public Toggle AutoGenerateToggle;
+
+    public void ValueUpdated()
+    {
+        Generate();
+    }
     public void GenerateButton()
+    {
+        Generate();
+    }
+    private void Generate()
     {
         SetNoiseScale(GetNoiseScale());
         SetOctaves(GetOctaves());

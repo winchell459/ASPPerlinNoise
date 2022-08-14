@@ -93,8 +93,9 @@ public class AIFollow : MonoBehaviour
 
     public void RestartTrack()
     {
-        foreach(Checkpoint checkpoint in track)
+        for(int i = track.Count - 1; i >= 0; i -= 1)
         {
+            Checkpoint checkpoint = track[i];
             checkpoint.Deactivate();
             track.Remove(checkpoint);
             waypointPool.Add(checkpoint);
