@@ -7,8 +7,9 @@ public class AIFollow : MonoBehaviour
     public Transform target;
     public Transform waypointCircuit;
     public bool following;
-    public bool trackComplete;
-    [SerializeField] private List<Checkpoint> track = new List<Checkpoint>();
+   
+     
+    [SerializeField] public AITrack track = new AITrack();
     public float followRange = 5;
     public float waypointDistance = 10;
     public float waypointVelocity = 1;
@@ -19,6 +20,7 @@ public class AIFollow : MonoBehaviour
     public bool reversingTrack;
     private List<Checkpoint> waypointPool = new List<Checkpoint>();
     public Checkpoint checkpointPrefab;
+    private Checkpoint current = null;
 
     // Start is called before the first frame update
     void Start()
@@ -29,10 +31,12 @@ public class AIFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!trackComplete && !following &&  Vector3.Distance(transform.position, target.position) < followRange && Vector3.Distance(track[track.Count - 1].transform.position, target.position) <= waypointDistance)
+        if(!track.trackComplete && !following &&  Vector3.Distance(transform.position, target.position) < followRange 
+            && 
+            Vector3.Distance(track.checkpoints[track.checkpoints.Count - 1].transform.position, target.position) <= waypointDistance)
         {
             following = true;
-        }else if(following && !trackComplete && Vector3.Distance(transform.position, target.position) > followRange)
+        }else if(following && !track.trackComplete && Vector3.Distance(transform.position, target.position) > followRange)
         {
             following = false;
             reversingTrack = true;
@@ -41,25 +45,25 @@ public class AIFollow : MonoBehaviour
         if (following)
         {
             waypointCircuit.position = target.position;
-            if(Vector3.Distance(track[track.Count - 1].transform.position, target.position) > waypointDistance)
+            if(Vector3.Distance(track.checkpoints[track.checkpoints.Count - 1].transform.position, target.position) > waypointDistance)
             {
-                track.Add(GetWaypoint(waypointCircuit, false));
+                track.checkpoints.Add(GetWaypoint(waypointCircuit, false));
                 waypointIndex += 1;
             }
 
-            if(track.Count > 20 && Vector3.Distance(track[0].transform.position, waypointCircuit.position) <= waypointDistance)
+            if(track.checkpoints.Count > 20 && Vector3.Distance(track.checkpoints[0].transform.position, waypointCircuit.position) <= waypointDistance)
             {
                 following = false;
-                trackComplete = true;
+                track.trackComplete = true;
                 waypointIndex = 0;
             }
         }
         else
         {
-            Checkpoint current = track[waypointIndex];
+            current = track.checkpoints[waypointIndex];
             int nextIndex = waypointIndex;
-            if (trackComplete) nextIndex = (nextIndex + 1) % track.Count;
-            else if (!trackComplete)
+            if (track.trackComplete) nextIndex = (nextIndex + 1) % track.checkpoints.Count;
+            else if (!track.trackComplete)
             {
                 if (reversingTrack)
                 {
@@ -72,9 +76,9 @@ public class AIFollow : MonoBehaviour
                 }
                 else
                 {
-                    if (nextIndex + 1 >= track.Count)
+                    if (nextIndex + 1 >= track.checkpoints.Count)
                     {
-                        nextIndex = track.Count - 2;
+                        nextIndex = track.checkpoints.Count - 2;
                         reversingTrack = true;
                     }
                     else nextIndex += 1;
@@ -83,7 +87,7 @@ public class AIFollow : MonoBehaviour
 
             if(Vector3.Distance(transform.position, current.transform.position) < waypointDistance)
             {
-                current = track[nextIndex];
+                current = track.checkpoints[nextIndex];
                 waypointIndex = nextIndex;
 
             }
@@ -93,16 +97,14 @@ public class AIFollow : MonoBehaviour
 
     public void RestartTrack()
     {
-        for(int i = track.Count - 1; i >= 0; i -= 1)
+        for(int i = track.checkpoints.Count - 1; i >= 0; i -= 1)
         {
-            Checkpoint checkpoint = track[i];
-            checkpoint.Deactivate();
-            track.Remove(checkpoint);
-            waypointPool.Add(checkpoint);
+            Checkpoint checkpoint = track.checkpoints[i];
+            ReturnWaypoint(checkpoint);
         }
-        track.Add(GetWaypoint(transform, true));
+        track.checkpoints.Add(GetWaypoint(transform, true));
         following = false;
-        trackComplete = false;
+        track.trackComplete = false;
     }
     private Checkpoint GetWaypoint(Transform target, bool start)
     {
@@ -125,5 +127,56 @@ public class AIFollow : MonoBehaviour
         waypoint.name = $"waypoint {(int)target.position.x}, {(int)target.position.z}";
 
         return waypoint;
+    }
+
+
+    private void ReturnWaypoint(Checkpoint waypoint)
+    {
+        waypoint.Deactivate();
+        track.checkpoints.Remove(waypoint);
+        waypointPool.Add(waypoint);
+    }
+
+    public void RemoveWaypoint(Transform waypoint)
+    {
+        for(int i = 0; i < track.checkpoints.Count; i += 1)
+        {
+            if(track.checkpoints[i].transform == waypoint)
+            {
+                RemoveWaypoint(track.checkpoints[i]);
+                break;
+            }
+        }
+    }
+    public void RemoveWaypoint(Checkpoint waypoint)
+    {
+        if(waypoint != track.checkpoints[0]) StartCoroutine(RemovingWaypoing(waypoint));
+    }
+
+    private IEnumerator RemovingWaypoing(Checkpoint waypoint)
+    {
+        while(waypoint == current)
+        {
+            yield return null;
+        }
+
+        ReturnWaypoint(waypoint);
+    }
+}
+
+[System.Serializable]
+public class AITrack
+{
+    public List<Checkpoint> checkpoints;
+    public bool trackComplete;
+    public AITrack()
+    {
+        checkpoints = new List<Checkpoint>();
+    }
+
+    public Checkpoint GetNextWaypoint(Checkpoint waypoint)
+    {
+        int nextIndex = (checkpoints.IndexOf(waypoint) + 1) % checkpoints.Count;
+        return checkpoints[nextIndex];
     }
 }

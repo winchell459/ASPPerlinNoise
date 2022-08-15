@@ -172,6 +172,11 @@ public class PerlinNoiseMenu : MonoBehaviour
         perlinNoiseControls.autoUpdate = autoUpdate;
         mapGenerator.autoUpdate = autoUpdate;
     }
+
+    public void AddMeshButton()
+    {
+        mapGenerator.AddMesh();
+    }
 }
 [System.Serializable]
 public class PerlinNoiseControls

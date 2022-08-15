@@ -181,7 +181,7 @@ namespace Sebastian
 
         public void AddMesh()
         {
-            foreach(MapDisplay display in displays)
+            foreach (MapDisplay display in displays)
             {
                 display.AddMesh();
             }

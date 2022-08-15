@@ -83,6 +83,9 @@ public class PlayerGrabber : MonoBehaviour
                 else if (hit.transform.CompareTag("Vegetation"))
                 {
                     Destroy(hit.transform.gameObject);
+                }else if (hit.transform.CompareTag("Checkpoint") && ai.GetComponent<AIFollow>().track.trackComplete)
+                {
+                    ai.GetComponent<AIFollow>().RemoveWaypoint(hit.transform);
                 }
             }
         }else if(gameHandler.paused && inputManager.PlayerSelectionDown())
@@ -96,9 +99,19 @@ public class PlayerGrabber : MonoBehaviour
                     if (hit.transform.CompareTag("Track"))
                     {
                         Transform car = null;
-                        if (placingPlayer) car = player.transform;
-                        else if (placingAI) car = ai.transform;
+                        Transform otherCar = null;
+                        if (placingPlayer)
+                        {
+                            car = player.transform;
+                            otherCar = ai.transform;
+                        }
+                        else if (placingAI)
+                        {
+                            car = ai.transform;
+                            otherCar = player.transform;
+                        }
                         car.position = hit.point;
+                        car.forward = Utility.CopyForward(otherCar);
                         if (placingAI) car.GetComponent<AIFollow>().RestartTrack();
                         //gameHandler.ResetPlayerVertical(car);
                     }

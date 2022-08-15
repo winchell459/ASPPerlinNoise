@@ -32,13 +32,14 @@ public class GrabberMenu : MonoBehaviour
         placingPlayer = true;
         playerGrabber.placingPlayer = placingPlayer;
         FindObjectOfType<PauseMenu>().HideMenus(true);
+        FindObjectOfType<PerlinNoiseMenu>().AddMeshButton();
     }
     public void PlaceAIButton()
     {
         placingAI = true;
         FindObjectOfType<PauseMenu>().HideMenus(true);
         playerGrabber.placingAI = placingAI;
-        //playerGrabber.ai.GetComponent<AIFollow>().RestartTrack();
+        FindObjectOfType<PerlinNoiseMenu>().AddMeshButton();
     }
 
     public void CameraRigPlayerToggleOnChanged()

@@ -33,11 +33,11 @@ namespace Sebastian
             meshRenderer.sharedMaterial.mainTexture = texture;
         }
 
-        public void DrawMesh(MeshData meshData, Texture2D texture, bool buildMeshCollider)
-        {
-            meshFilter.sharedMesh = meshData.CreateMesh();
-            meshRenderer.sharedMaterial.mainTexture = texture;
-            AddMesh();
-        }
+        //public void DrawMesh(MeshData meshData, Texture2D texture, bool buildMeshCollider)
+        //{
+        //    meshFilter.sharedMesh = meshData.CreateMesh();
+        //    meshRenderer.sharedMaterial.mainTexture = texture;
+        //    AddMesh();
+        //}
     }
 }

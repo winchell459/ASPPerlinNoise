@@ -89,4 +89,10 @@ public static class Utility
         time += mills;
         return time;
     }
+
+    public static Vector3 CopyForward(Transform forwardVehicle)
+    {
+        return new Vector3(forwardVehicle.forward.x, 0, forwardVehicle.forward.z).normalized;
+
+    } 
 }
