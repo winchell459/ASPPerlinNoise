@@ -34,10 +34,11 @@ using UnityStandardAssets.Vehicles.Car;
 
 #if !MOBILE_INPUT
             
-            m_Car.Move(h, v, v, handbrake);
+            //m_Car.Move(h, v, v, handbrake);
 #else
-            m_Car.Move(steering, accel, footbreak, 0f);
+            //m_Car.Move(steering, accel, footbreak, 0f);
 #endif
-        }
+        m_Car.Move(steering, accel, footbreak, 0f);
+    }
     }
 //}

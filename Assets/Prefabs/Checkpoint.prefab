@@ -110,9 +110,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   regular: {fileID: 2100000, guid: dc9fcf528551c4442987347972e2dbde, type: 2}
-  start: {fileID: 2100000, guid: 102fbe0f5be88964c869ca45ed5b9676, type: 2}
-  player: {fileID: 2100000, guid: b080823c4526de940a153443b60d35d7, type: 2}
+  start: {fileID: 2100000, guid: 0730e1ca04f854e1fa5ef3964730a039, type: 2}
+  player: {fileID: 2100000, guid: bffd12345cbcf4329987ad17e7230dd4, type: 2}
   renderer: {fileID: 8426323574439617428}
+  hasPlayer: 0
 --- !u!1 &8986119223176252968
 GameObject:
   m_ObjectHideFlags: 0

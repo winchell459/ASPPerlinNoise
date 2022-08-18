@@ -28,6 +28,7 @@ public class RaceGameHandler : MonoBehaviour
 
     public float trackHeight;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +44,10 @@ public class RaceGameHandler : MonoBehaviour
         {
             Time.timeScale = 1;
         }
-        else Time.timeScale = 0;
+        else
+        {
+            Time.timeScale = 0;
+        }
         pauseMenu.Pause(paused);
         //
         StartCoroutine(CountdownTimer(startCountdown, 1, 3));
@@ -65,8 +69,8 @@ public class RaceGameHandler : MonoBehaviour
 
 
 #else
-            cameraRig.transform.parent = player;
-            cameraRig.transform.localPosition = Vector3.zero;
+            //cameraRig.transform.parent = player;
+            //cameraRig.transform.localPosition = Vector3.zero;
 #endif
 
 

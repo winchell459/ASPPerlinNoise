@@ -1,14 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_ANDROID
 using UnityEngine.InputSystem;
+#endif
 
 //namespace InputManager
 //{
     public class InputManager : MonoBehaviour
     {
-        [SerializeField] private InputActionProperty leftHandTrigger, leftHandGrip, leftHandJoystick;
-        [SerializeField] private InputActionProperty rightHandTrigger, rightHandGrip, rightHandJoystick, rightHand;
+#if UNITY_ANDROID
+
+#endif
+#if UNITY_ANDROID
+    [SerializeField] private InputActionProperty leftHandTrigger, leftHandGrip, leftHandJoystick;
+    [SerializeField] private InputActionProperty rightHandTrigger, rightHandGrip, rightHandJoystick, rightHand;
+#endif
+
 
     public bool debugVR = false;
 #if UNITY_ANDROID
@@ -25,12 +33,14 @@ using UnityEngine.InputSystem;
     {
         if (vr && !debugVR)
         {
-           
+#if UNITY_ANDROID
             SetButton(leftHandGrip.action?.ReadValue<float>() ?? 0, ref leftHandGripDown, ref leftHandGripUp, ref leftHandGripPressed, 0);
             
             SetButton(rightHandTrigger.action?.ReadValue<float>() ?? 0, ref rightHandTriggerDown, ref rightHandTriggerUp, ref rightHandTriggerPressed, 0);
 
             SetButton(leftHandTrigger.action?.ReadValue<float>() ?? 0, ref leftHandTriggerDown, ref leftHandTriggerUp, ref leftHandTriggerPressed, 0);
+#endif
+
         }
         else
         {
@@ -82,12 +92,12 @@ using UnityEngine.InputSystem;
     }
     public bool UISelection()
     {
-        if (debugVR) return Input.GetKeyDown(KeyCode.RightControl);
+        if (debugVR) return Input.GetKeyDown(KeyCode.LeftShift);
         return leftHandTriggerDown;
     }
     public bool UISelectionUp()
     {
-        if (debugVR) return Input.GetKeyUp(KeyCode.RightControl);
+        if (debugVR) return Input.GetKeyUp(KeyCode.LeftShift);
         return leftHandTriggerUp;
     }
     public bool pause()
@@ -109,7 +119,10 @@ using UnityEngine.InputSystem;
         {
             if (vr && !debugVR)
             {
-                return rightHandTrigger.action?.ReadValue<float>() ?? 0;
+#if UNITY_ANDROID
+            return rightHandTrigger.action?.ReadValue<float>() ?? 0;
+#endif
+            return 0;
             }
             else
             {
@@ -121,7 +134,10 @@ using UnityEngine.InputSystem;
         {
             if (vr && !debugVR)
             {
-                return rightHandGrip.action?.ReadValue<float>() ?? 0;
+#if UNITY_ANDROID
+            return rightHandGrip.action?.ReadValue<float>() ?? 0;
+#endif
+            return 0;
             }
             else
             {
@@ -133,7 +149,10 @@ using UnityEngine.InputSystem;
         {
             if (vr && !debugVR)
             {
-                return leftHandJoystick.action?.ReadValue<Vector2>().x ?? 0;
+#if UNITY_ANDROID
+            return leftHandJoystick.action?.ReadValue<Vector2>().x ?? 0;
+#endif
+            return 0;
             }
             else
             {
@@ -145,7 +164,10 @@ using UnityEngine.InputSystem;
         {
             if (vr && !debugVR)
             {
-                return leftHandJoystick.action?.ReadValue<Vector2>().y ?? 0;
+#if UNITY_ANDROID
+            return leftHandJoystick.action?.ReadValue<Vector2>().y ?? 0;
+#endif
+            return 0;
             }
             else
             {
@@ -157,11 +179,14 @@ using UnityEngine.InputSystem;
         {
             if (vr && !debugVR)
             {
-                return rightHandJoystick.action?.ReadValue<Vector2>().x ?? 0;
+#if UNITY_ANDROID
+            return rightHandJoystick.action?.ReadValue<Vector2>().x ?? 0;
+#endif
+            return 0;
             }
             else
             {
-                return 0;// Input.GetAxis("Vertical");
+                return Input.mouseScrollDelta.x * 10;// Input.GetAxis("Vertical");
             }
         }
 
@@ -169,11 +194,15 @@ using UnityEngine.InputSystem;
         {
             if (vr && !debugVR)
             {
+#if UNITY_ANDROID
                 return rightHandJoystick.action?.ReadValue<Vector2>().y ?? 0;
-            }
-            else
+#endif
+            return 0;
+        }
+        else
             {
-                return 0;// Input.GetAxis("Vertical");
+            Debug.Log(Input.mouseScrollDelta.y);
+                return Input.mouseScrollDelta.y*10;// Input.GetAxis("Vertical");
             }
         }
     }
