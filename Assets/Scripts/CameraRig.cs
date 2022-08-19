@@ -121,7 +121,7 @@ public class CameraRig : MonoBehaviour
     {
         Vector3 direction = cameraHead.transform.position - cameraRig.transform.position;
         float length = direction.magnitude;
-        float newLength = length - delta * zoomSpeed * Time.deltaTime;
+        float newLength = Mathf.Clamp(length - delta * zoomSpeed * Time.deltaTime, 0.0001f, float.MaxValue);
         cameraHead.transform.position = cameraRig.transform.position + newLength * direction.normalized;
     }
 
