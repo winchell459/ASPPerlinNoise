@@ -15,14 +15,9 @@ public class GrabberMenu : MonoBehaviour
 
     //AIMenu
     public AIMenu ai;
-    public Text aiSpeedText;
+    
 
-    public void AIUpdateButton()
-    {
-        int speed = int.Parse(aiSpeedText.text);
-        ai.speed = speed;
-        ai.OnSpeedChanged();
-    }
+    
     private void Start()
     {
         
@@ -82,14 +77,5 @@ public class GrabberMenu : MonoBehaviour
         //}
     }
 }
-[System.Serializable]
-public class AIMenu
-{
-    public UnityStandardAssets.Vehicles.Car.CarController vehicle;
-    public float speed = 40;
-    public void OnSpeedChanged()
-    {
-        vehicle.TopSpeed = speed;
-    }
-}
+
 

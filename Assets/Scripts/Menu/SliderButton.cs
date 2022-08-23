@@ -10,6 +10,7 @@ public class SliderButton : MonoBehaviour
     [SerializeField] private float currentValue;
     public float step = 1;
     public GameObject ValueUpdatedObject;
+    public string valueUpdatedMethod = "ValueUpdated";
 
     private void Start()
     {
@@ -18,7 +19,6 @@ public class SliderButton : MonoBehaviour
 
     public void LeftButton()
     {
-        Debug.Log("LeftButton");
         currentValue -= step;
         UpdateSlider();
     }
@@ -42,7 +42,7 @@ public class SliderButton : MonoBehaviour
     private void Display()
     {
         value.text = currentValue.ToString();
-        if(ValueUpdatedObject) ValueUpdatedObject.SendMessage("ValueUpdated");
+        if(ValueUpdatedObject) ValueUpdatedObject.SendMessage(valueUpdatedMethod);
     }
 
 

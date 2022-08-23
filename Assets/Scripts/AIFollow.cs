@@ -22,6 +22,13 @@ public class AIFollow : MonoBehaviour
     public Checkpoint checkpointPrefab;
     private Checkpoint current = null;
 
+    public enum FollowTypes { TrackBuilding, Racing, Following, Avoiding }
+    public FollowTypes followType;
+
+    public float avoidanceDistance = 5;
+    public float avoidanceAngle = 0;
+    public Transform avoidanceAngleForward;
+    public bool avoidanceAngleGlobal = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +37,16 @@ public class AIFollow : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        if (followType == FollowTypes.TrackBuilding) TrackBuilding();
+        else if (followType == FollowTypes.Racing) Racing();
+        else if (followType == FollowTypes.Following) Following();
+        else if (followType == FollowTypes.Avoiding) Avoiding();
+
+       
+    }
+
+    private void TrackBuilding()
     {
         if (!track.trackComplete && !following && Vector3.Distance(transform.position, target.position) < followRange
             &&
@@ -63,7 +80,7 @@ public class AIFollow : MonoBehaviour
         {
             current = track.checkpoints[waypointIndex];
             int nextIndex = waypointIndex;
-            if (track.trackComplete) nextIndex = (nextIndex + 1) % track.checkpoints.Count;
+            if (track.trackComplete) followType = FollowTypes.Racing;//nextIndex = (nextIndex + 1) % track.checkpoints.Count;
             else if (!track.trackComplete)
             {
                 if (reversingTrack)
@@ -96,6 +113,40 @@ public class AIFollow : MonoBehaviour
             }
             waypointCircuit.position = current.transform.position;
         }
+    }
+
+    private void Racing()
+    {
+        current = track.checkpoints[waypointIndex];
+        int nextIndex = (waypointIndex + 1) % track.checkpoints.Count;
+
+        if (Vector3.Distance(transform.position, current.transform.position) < waypointDistance)
+        {
+            current = track.checkpoints[nextIndex];
+            waypointIndex = nextIndex;
+
+        }
+        waypointCircuit.position = current.transform.position;
+    }
+
+    private void Following()
+    {
+        waypointCircuit.position = target.position;
+    }
+
+
+    private void Avoiding()
+    {
+        if (avoidanceAngleGlobal)
+        {
+            avoidanceAngleForward.eulerAngles = Vector3.up * avoidanceAngle;
+        }
+        else
+        {
+            avoidanceAngleForward.localEulerAngles = Vector3.up * avoidanceAngle;
+        }
+
+        waypointCircuit.position = target.position + avoidanceAngleForward.forward * avoidanceDistance;
     }
 
     public void RestartTrack()
