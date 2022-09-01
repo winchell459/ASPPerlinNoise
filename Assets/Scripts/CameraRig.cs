@@ -13,6 +13,7 @@ public class CameraRig : MonoBehaviour
     public GameObject cameraHead, cameraRig, cameraSwivel;
     public Transform playPos { get { return getPlayerPos(); } }
     public Transform carPos, pausedPos, aiPos;
+    public Vector3 carOffset, pausedOffset, aiOffset;
     [SerializeField] private bool active;
     public float zoomSpeed = 10;
     public float rotateSpeed = 10;
@@ -48,6 +49,23 @@ public class CameraRig : MonoBehaviour
         }
     }
 
+    void SetPlayerOffset(Vector3 offset)
+    {
+        switch (followType)
+        {
+            case FollowTypes.car:
+                carOffset = offset;
+                break;
+
+            case FollowTypes.ai:
+                aiOffset = offset;
+                break;
+            default:
+                pausedOffset = offset;
+                break;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,31 +76,20 @@ public class CameraRig : MonoBehaviour
     {
         if(!interruptCameraRig) cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
         if ((rch.GetRaceStarted() && !paused) && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
-        else if (paused || !rch.GetRaceStarted())
-        {
-            cameraRig.transform.position = pausedPos.position;
-            cameraSwivel.transform.forward = Vector3.forward;
-        }
+        //else if (paused || !rch.GetRaceStarted())
+        //{
+        //    SetPlayerPosPauseMenu();
+        //}
     }
     // Update is called once per frame
     void Update()
     {
-        if (active)
-        {
-            float right = inputManager.zoom();
-            float left = inputManager.rotate();
-            Zoom(right);
-            if (leftThreshold < Mathf.Abs(left)) Pan(left);
-
-            //cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
-            //if (!paused && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
-        }
+        
 
         if (rch.paused && !paused)
         {
             //move head to pausePos
-            cameraRig.transform.position = pausedPos.position;
-            cameraSwivel.transform.forward = Vector3.forward;
+            SetPlayerPosPauseMenu();
             paused = true;
             //followPlayerForward = !followPlayerForward;
 
@@ -91,8 +98,7 @@ public class CameraRig : MonoBehaviour
         else if (!rch.paused && paused)
         {
             //move head to playPos
-            cameraRig.transform.position = playPos.position;
-            cameraSwivel.transform.forward = forward(playPos.forward);
+            SetPlayerPosCar();
             paused = false;
 
             //cameraSwivel.transform.forward = pauseHeadForward;
@@ -108,6 +114,17 @@ public class CameraRig : MonoBehaviour
                 cameraSwivel.transform.forward = headForward;
             }
         }
+
+        if (active && !paused)
+        {
+            float right = inputManager.zoom();
+            float left = inputManager.rotate();
+            Zoom(right);
+            if (leftThreshold < Mathf.Abs(left)) Pan(left);
+
+            //cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
+            //if (!paused && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
+        }
     }
 
     
@@ -119,10 +136,12 @@ public class CameraRig : MonoBehaviour
 
     private void Zoom(float delta)
     {
-        Vector3 direction = cameraHead.transform.position - cameraRig.transform.position;
+        Vector3 direction = cameraHead.transform.position - cameraSwivel.transform.position;
         float length = direction.magnitude;
         float newLength = Mathf.Clamp(length - delta * zoomSpeed * Time.deltaTime, 0.0001f, float.MaxValue);
-        cameraHead.transform.position = cameraRig.transform.position + newLength * direction.normalized;
+        cameraHead.transform.position = cameraSwivel.transform.position + newLength * direction.normalized;
+
+        SetPlayerOffset(cameraHead.transform.localPosition);
     }
 
     private void Pan(float rotation)
@@ -143,4 +162,25 @@ public class CameraRig : MonoBehaviour
         this.active = active;
     }
 
+    private void SetPlayerPosPauseMenu()
+    {
+        cameraSwivel.transform.forward = Vector3.forward;
+        cameraHead.transform.position = pausedPos.position;
+        Debug.Log(cameraHead.transform.position);
+        
+    }
+
+    private void SetPlayerPosCar()
+    {
+        cameraRig.transform.position = playPos.position;
+        cameraHead.transform.localPosition = carOffset;
+        cameraSwivel.transform.forward = forward(playPos.forward);
+        
+
+    }
+
+    private void SetPlayerPosAICar()
+    {
+
+    }
 }
