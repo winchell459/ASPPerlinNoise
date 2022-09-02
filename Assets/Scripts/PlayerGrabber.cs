@@ -100,6 +100,7 @@ public class PlayerGrabber : MonoBehaviour
                     {
                         Transform car = null;
                         Transform otherCar = null;
+                        Transform startPos = FindObjectOfType<RaceGameHandler>().playerStartPos;
                         if (placingPlayer)
                         {
                             car = player.transform;
@@ -109,9 +110,12 @@ public class PlayerGrabber : MonoBehaviour
                         {
                             car = ai.transform;
                             otherCar = player.transform;
+                            startPos = FindObjectOfType<RaceGameHandler>().aiStartPos;
                         }
                         car.position = hit.point;
                         car.forward = Utility.CopyForward(otherCar);
+                        startPos.position = car.position;
+                        startPos.forward = car.forward;
                         if (placingAI) car.GetComponent<AIFollow>().RestartTrack();
                         //gameHandler.ResetPlayerVertical(car);
                     }

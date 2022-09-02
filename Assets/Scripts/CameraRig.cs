@@ -84,7 +84,9 @@ public class CameraRig : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+        if (inputManager.BDown()) FindObjectOfType<HUDHandler>().Debug("buttonB pressed");
+        if (inputManager.XDown()) FindObjectOfType<HUDHandler>().Debug("buttonX pressed");
 
         if (rch.paused && !paused)
         {
@@ -138,7 +140,7 @@ public class CameraRig : MonoBehaviour
     {
         Vector3 direction = cameraHead.transform.position - cameraSwivel.transform.position;
         float length = direction.magnitude;
-        float newLength = Mathf.Clamp(length - delta * zoomSpeed * Time.deltaTime, 0.0001f, float.MaxValue);
+        float newLength = Mathf.Clamp(length - delta * zoomSpeed /** Time.deltaTime*/, 0.1f, float.MaxValue);
         cameraHead.transform.position = cameraSwivel.transform.position + newLength * direction.normalized;
 
         SetPlayerOffset(cameraHead.transform.localPosition);

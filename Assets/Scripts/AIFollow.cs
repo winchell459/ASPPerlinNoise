@@ -234,4 +234,20 @@ public class AITrack
         int nextIndex = (checkpoints.IndexOf(waypoint) + 1) % checkpoints.Count;
         return checkpoints[nextIndex];
     }
+
+    public void RestartRace()
+    {
+        if (trackComplete)
+        {
+            checkpoints[0].SetHasPlayer(false);
+            checkpoints[1].SetHasPlayer(false);
+            checkpoints[2].SetHasPlayer(true);
+            for(int i = 3; i < checkpoints.Count; i += 1)
+            {
+                checkpoints[i].SetHasPlayer(false);
+            }
+        }
+        
+
+    }
 }

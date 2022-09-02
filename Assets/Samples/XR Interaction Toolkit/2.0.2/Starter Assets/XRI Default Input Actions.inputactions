@@ -1073,6 +1073,118 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "XRI RightHand B",
+            "id": "6c6250c8-538e-41bf-96ac-d7a0586f8472",
+            "actions": [
+                {
+                    "name": "Secondary Button",
+                    "type": "Button",
+                    "id": "655600fc-0a11-485c-bf11-e352ed94ce08",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0af84231-0633-4919-b323-351c9a67928a",
+                    "path": "<XRController>{RightHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Secondary Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "XRI RightHand A",
+            "id": "31966972-c30a-4da1-8f08-116d2f2e56af",
+            "actions": [
+                {
+                    "name": "Primary Button",
+                    "type": "Button",
+                    "id": "c2ff91e2-2b3b-4a53-a762-0f3330f73c55",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4ee129c6-263a-47e0-a587-c4f7abe0b204",
+                    "path": "<XRController>{RightHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Primary Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "XRI LeftHand X",
+            "id": "0e9985a6-0685-47c0-9c09-726f27f6eb5d",
+            "actions": [
+                {
+                    "name": "X",
+                    "type": "Button",
+                    "id": "cf27cdf0-5173-4cc9-9e0b-461b754377e5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f0aaa854-fd1e-4ddc-a9cb-b9e0b4d86842",
+                    "path": "<XRController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "X",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "XRI LeftHand Y",
+            "id": "6245d62e-c8d9-4d3f-873a-975be1212752",
+            "actions": [
+                {
+                    "name": "Secondary Button",
+                    "type": "Button",
+                    "id": "50992140-ccca-4165-9101-f2114b8ad69b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3cdc1de7-aed5-47b6-b8cf-11a91d2d9511",
+                    "path": "<XRController>{RightHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Secondary Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

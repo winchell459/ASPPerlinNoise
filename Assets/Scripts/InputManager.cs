@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
 #if UNITY_ANDROID
     [SerializeField] private InputActionProperty leftHandTrigger, leftHandGrip, leftHandJoystick;
     [SerializeField] private InputActionProperty rightHandTrigger, rightHandGrip, rightHandJoystick, rightHand;
+    [SerializeField] private InputActionProperty buttonA, buttonB, buttonX, buttonY;
 #endif
 
 
@@ -28,6 +29,10 @@ public class InputManager : MonoBehaviour
     bool leftHandGripDown = false, leftHandGripUp = false, leftHandGripPressed = false;
     bool leftHandTriggerDown = false, leftHandTriggerUp = false, leftHandTriggerPressed = false;
     bool rightHandTriggerDown = false, rightHandTriggerUp = false, rightHandTriggerPressed = false;
+    bool buttonADown = false, buttonAUp = false, buttonAPressed = false;
+    bool buttonBDown = false, buttonBUp = false, buttonBPressed = false;
+    bool buttonXDown = false, buttonXUp = false, buttonXPressed = false;
+    bool buttonYDown = false, buttonYUp = false, buttonYPressed = false;
 
     private void Update()
     {
@@ -39,6 +44,11 @@ public class InputManager : MonoBehaviour
             SetButton(rightHandTrigger.action?.ReadValue<float>() ?? 0, ref rightHandTriggerDown, ref rightHandTriggerUp, ref rightHandTriggerPressed, 0);
 
             SetButton(leftHandTrigger.action?.ReadValue<float>() ?? 0, ref leftHandTriggerDown, ref leftHandTriggerUp, ref leftHandTriggerPressed, 0);
+
+            SetButton(buttonA.action.IsPressed() ? 1 : 0, ref buttonADown, ref buttonAUp, ref buttonAPressed, 0);
+            SetButton(buttonB.action.IsPressed() ? 1 : 0, ref buttonBDown, ref buttonBUp, ref buttonBPressed, 0);
+            SetButton(buttonX.action.IsPressed() ? 1 : 0, ref buttonXDown, ref buttonXUp, ref buttonXPressed, 0);
+            SetButton(buttonY.action.IsPressed() ? 1 : 0, ref buttonYDown, ref buttonYUp, ref buttonYPressed, 0);
 #endif
 
         }
@@ -80,15 +90,16 @@ public class InputManager : MonoBehaviour
 
     public bool PlayerSelectionDown()
     {
-        return rightHandTriggerDown;
+        return leftHandGripDown;
+        //return rightHandTriggerDown;
     }
     public bool PlayerSelection()
     {
-        return rightHandTriggerPressed;
+        return leftHandGripPressed;
     }
     public bool PlayerSelectionUp()
     {
-        return rightHandTriggerUp;
+        return leftHandGripUp;
     }
     public bool UISelection()
     {
@@ -104,15 +115,47 @@ public class InputManager : MonoBehaviour
     {
         if (vr && !debugVR)
         {
-            return leftHandGripDown;
+            return XDown();
         }
         else
         {
             return Input.GetKeyDown(KeyCode.Escape);
         }
+    }
+    public bool BUp()
+    {
+        return buttonBUp;
+    }
+    public bool BDown()
+    {
+        return buttonBDown;
+    }
 
+    public bool BPressed()
+    {
+        return buttonBPressed;
+    }
+    public bool AUp()
+    {
+        return buttonAUp;
+    }
+    public bool ADown()
+    {
+        return buttonADown;
+    }
 
+    public bool APressed()
+    {
+        return buttonAPressed;
+    }
 
+    public bool XPressed()
+    {
+        return buttonXPressed;
+    }
+    public bool XDown()
+    {
+        return buttonXDown;
     }
 
     public float gas()
@@ -195,7 +238,12 @@ public class InputManager : MonoBehaviour
         if (vr && !debugVR)
         {
 #if UNITY_ANDROID
-            return rightHandJoystick.action?.ReadValue<Vector2>().y ?? 0;
+
+            if (BDown() && !ADown()) return 1;
+            else if (!BDown() && ADown()) return -1;
+            else return 0;
+
+            //return rightHandJoystick.action?.ReadValue<Vector2>().y ?? 0;
 #endif
             return 0;
         }

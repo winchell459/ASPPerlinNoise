@@ -36,20 +36,36 @@ public class RaceGameHandler : MonoBehaviour
         GenerateMap(mapGenerator.seed);
     }
 
+    public Transform playerStartPos, aiStartPos;
+
     public void StartLevel()
     {
-        raceStarted = false;
-        if (!paused)
+        //raceStarted = false;
+        //if (!paused)
+        //{
+        //    Time.timeScale = 1;
+        //}
+        //else Time.timeScale = 0;
+        //pauseMenu.Pause(paused);
+        ////
+        //StartCoroutine(CountdownTimer(startCountdown, 1, 3));
+        //if (newBuild)
+        //{
+        //    GenerateMap(true);
+        //}
+
+        ai.transform.position = aiStartPos.position;
+        ai.transform.forward = aiStartPos.forward;
+        player.transform.position = playerStartPos.position;
+        player.transform.forward = playerStartPos.forward;
+
+        if (ai.GetComponent<AIFollow>().track.trackComplete)
         {
-            Time.timeScale = 1;
+            ai.GetComponent<AIFollow>().track.RestartRace();
         }
-        else Time.timeScale = 0;
-        pauseMenu.Pause(paused);
-        //
-        StartCoroutine(CountdownTimer(startCountdown, 1, 3));
-        if (newBuild)
+        else
         {
-            GenerateMap(true);
+            ai.GetComponent<AIFollow>().RestartTrack();
         }
     }
 
