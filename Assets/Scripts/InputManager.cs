@@ -176,6 +176,27 @@ public class InputManager : MonoBehaviour
         return rightHandGripPressed;
     }
 
+    public bool rightTriggerUp()
+    {
+        if(vr && !debugVR)
+        {
+            return rightHandTriggerUp;
+        }
+        else
+        {
+            return Input.GetMouseButtonUp(0);
+        }
+    }
+    public bool rightTriggerDown()
+    {
+        return rightHandTriggerDown;
+    }
+
+    public bool rightTriggerPressed()
+    {
+        return rightHandTriggerPressed;
+    }
+
     public float gas()
     {
         if (vr && !debugVR)

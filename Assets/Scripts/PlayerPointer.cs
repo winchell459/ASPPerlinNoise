@@ -13,6 +13,8 @@ public class PlayerPointer : MonoBehaviour
     public float weightSmoothing = 1;
     private float weightTarget = 1;
 
+    protected RaycastHit hit;
+    protected bool targetFound = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,24 +24,35 @@ public class PlayerPointer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit hit;
+        SetPointer();
+
+    }
+
+    protected virtual void SetPointer()
+    {
+        
         if (Physics.Raycast(new Ray(RightHandController.position, RightHandController.forward), out hit, 500, layerMask))
         {
             if (hit.transform.CompareTag("Track"))
             {
+                targetFound = true;
                 StartCoroutine(SmoothRigWieght(1));
-                RightHand_target.position = hit.transform.position;
+                RightHand_target.position = hit.point;
+                RightHand_target.forward = Vector3.up;
+                RightHand_target.right = RightHand_target.position - transform.position;
+
             }
             else
             {
+                targetFound = false;
                 StartCoroutine(SmoothRigWieght(0));
             }
         }
         else
         {
+            targetFound = false;
             StartCoroutine(SmoothRigWieght(0));
         }
-
     }
 
     IEnumerator SmoothRigWieght(float rigWeight)
