@@ -39,7 +39,7 @@ public class PlayerPointer : MonoBehaviour
                 StartCoroutine(SmoothRigWieght(1));
                 RightHand_target.position = hit.point;
                 RightHand_target.forward = Vector3.up;
-                RightHand_target.right = RightHand_target.position - transform.position;
+                RightHand_target.right = (RightHand_target.position - transform.position).normalized;
 
             }
             else

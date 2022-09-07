@@ -28,6 +28,8 @@ public class CameraRig : MonoBehaviour
     private Vector3 pauseHeadForward;
     public bool interruptCameraRig;
 
+    private float cameraDefaultScale;
+
     public FollowTypes followType;
     public enum FollowTypes
     {
@@ -71,31 +73,28 @@ public class CameraRig : MonoBehaviour
     {
         //playPos.position = cameraHead.transform.position;
         //playPos.parent = cameraHead.transform.parent;
+
+        cameraDefaultScale = cameraHead.transform.localPosition.y;
     }
     private void FixedUpdate()
     {
         if(!interruptCameraRig) cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
         if ((rch.GetRaceStarted() && !paused) && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
-        //else if (paused || !rch.GetRaceStarted())
-        //{
-        //    SetPlayerPosPauseMenu();
-        //}
+
     }
     // Update is called once per frame
     void Update()
     {
 
-        if (inputManager.BDown()) FindObjectOfType<HUDHandler>().Debug("buttonB pressed");
-        if (inputManager.XDown()) FindObjectOfType<HUDHandler>().Debug("buttonX pressed");
+        //if (inputManager.BDown()) FindObjectOfType<HUDHandler>().Debug("buttonB pressed");
+        //if (inputManager.XDown()) FindObjectOfType<HUDHandler>().Debug("buttonX pressed");
 
         if (rch.paused && !paused)
         {
             //move head to pausePos
             SetPlayerPosPauseMenu();
             paused = true;
-            //followPlayerForward = !followPlayerForward;
-
-            //pauseHeadForward = cameraSwivel.transform.forward;
+            
         }
         else if (!rch.paused && paused)
         {
@@ -103,7 +102,7 @@ public class CameraRig : MonoBehaviour
             SetPlayerPosCar();
             paused = false;
 
-            //cameraSwivel.transform.forward = pauseHeadForward;
+       
         }
 
         if(!paused && inputManager.UISelection() || inputManager.UISelectionUp())
@@ -127,6 +126,9 @@ public class CameraRig : MonoBehaviour
             //cameraRig.transform.position = new Vector3(playPos.position.x, cameraRig.transform.position.y, playPos.position.z);
             //if (!paused && followPlayerForward) cameraRig.transform.forward = forward(playPos.forward);
         }
+
+        float cameraScale = cameraHead.transform.localPosition.y / cameraDefaultScale + 1;
+        cameraRig.transform.localScale = cameraScale * Vector3.one;
     }
 
     
@@ -166,6 +168,7 @@ public class CameraRig : MonoBehaviour
 
     private void SetPlayerPosPauseMenu()
     {
+        cameraRig.transform.position = pausedPos.position;
         cameraSwivel.transform.forward = Vector3.forward;
         cameraHead.transform.position = pausedPos.position;
         Debug.Log(cameraHead.transform.position);

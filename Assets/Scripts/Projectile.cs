@@ -13,6 +13,10 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.transform.GetComponent<Chicken>())
+        {
+            collision.transform.GetComponent<Chicken>().Hit(1);
+        }
         Destroy(gameObject);
     }
 }
