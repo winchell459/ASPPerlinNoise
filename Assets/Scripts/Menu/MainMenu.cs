@@ -24,4 +24,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
+    public void ThirdPersonButton()
+    {
+        SceneManager.LoadScene(2);
+    }
 }

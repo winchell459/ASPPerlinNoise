@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RacingGame.unity
     guid: 5f05549eb079ff544a82e7ef68453235
+  - enabled: 1
+    path: Assets/Scenes/ThirdPersonTest.unity
+    guid: 412049d65d51d4e47b1701dcfc0ceeef
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 85b22741a2564bc4d836bfcebfe62124, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 625c55bd3efdafc469b2451512e64562, type: 2}

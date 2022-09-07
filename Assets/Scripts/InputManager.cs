@@ -34,6 +34,8 @@ public class InputManager : MonoBehaviour
     bool buttonXDown = false, buttonXUp = false, buttonXPressed = false;
     bool buttonYDown = false, buttonYUp = false, buttonYPressed = false;
 
+    bool rightHandGripDown = false, rightHandGripUp = false, rightHandGripPressed = false;
+
     private void Update()
     {
         if (vr && !debugVR)
@@ -49,6 +51,8 @@ public class InputManager : MonoBehaviour
             SetButton(buttonB.action.IsPressed() ? 1 : 0, ref buttonBDown, ref buttonBUp, ref buttonBPressed, 0);
             SetButton(buttonX.action.IsPressed() ? 1 : 0, ref buttonXDown, ref buttonXUp, ref buttonXPressed, 0);
             SetButton(buttonY.action.IsPressed() ? 1 : 0, ref buttonYDown, ref buttonYUp, ref buttonYPressed, 0);
+
+            SetButton(rightHandGrip.action?.ReadValue<float>() ?? 0, ref rightHandGripDown, ref rightHandGripUp, ref rightHandGripPressed, 0);
 #endif
 
         }
@@ -156,6 +160,20 @@ public class InputManager : MonoBehaviour
     public bool XDown()
     {
         return buttonXDown;
+    }
+
+    public bool rightGripUp()
+    {
+        return rightHandGripUp;
+    }
+    public bool rightGripDown()
+    {
+        return rightHandGripDown;
+    }
+
+    public bool rightGripPressed()
+    {
+        return rightHandGripPressed;
     }
 
     public float gas()
