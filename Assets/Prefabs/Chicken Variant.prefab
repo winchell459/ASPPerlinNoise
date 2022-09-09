@@ -41,19 +41,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4303844821561524, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.17869142
       objectReference: {fileID: 0}
     - target: {fileID: 4303844821561524, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4303844821561524, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.98390514
       objectReference: {fileID: 0}
     - target: {fileID: 4303844821561524, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4303844821561524, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -61,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4303844821561524, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -159.413
       objectReference: {fileID: 0}
     - target: {fileID: 4303844821561524, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -79,32 +79,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 95943282229431942, guid: 312b31977ed9b2d48a14849ebb8c7fb3, type: 3}
   m_PrefabInstance: {fileID: 714188057091040834}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3051071672406052077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715481755708118008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e6e21761619e9b44b3a3a13738804ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 5
-  walkAcceleration: 3
-  deceleration: 1
-  runSpeed: 10
-  runAcceleration: 5
-  walkTime: 3
-  runTime: 3
-  eatTime: 2
-  headTurnTime: 1
-  anim: {fileID: 629824076560607428}
-  rb: {fileID: 1287426595777257765}
-  health: 5
-  birthRate: 5
-  state: 0
 --- !u!54 &1287426595777257765
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -134,3 +108,31 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.19419765
   m_Center: {x: 0, y: 0.19197273, z: 0}
+--- !u!114 &3051071672406052077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715481755708118008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6e21761619e9b44b3a3a13738804ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  walkAcceleration: 3
+  deceleration: 1
+  runSpeed: 10
+  runAcceleration: 5
+  walkTime: 3
+  runTime: 3
+  eatTime: 2
+  headTurnTime: 1
+  anim: {fileID: 629824076560607428}
+  rb: {fileID: 1287426595777257765}
+  health: 2
+  birthRate: 1
+  maxPopulationDensity: 5
+  populationRadius: 20
+  state: 0
