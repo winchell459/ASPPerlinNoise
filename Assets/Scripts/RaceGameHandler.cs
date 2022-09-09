@@ -28,6 +28,8 @@ public class RaceGameHandler : MonoBehaviour
 
     public float trackHeight;
 
+    private float timerStart;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,8 +40,33 @@ public class RaceGameHandler : MonoBehaviour
 
     public Transform playerStartPos, aiStartPos;
 
+
     public void StartLevel()
     {
+        timerStart = Time.time;
+        hudHandler.SetCounts(0, 0, 0);
+        RebuildMesh();
+        float[,] heightMap = mapGenerator.heightMap;
+        int width = heightMap.GetLength(0);
+        int height = heightMap.GetLength(1);
+        Vector3[,] map = new Vector3[width, height];
+        for(int i = 0; i < width; i += 1)
+        {
+            for(int j = 0; j < height; j += 1)
+            {
+                float x = 5 * i - 248 + 0.5f;
+                float z = 248 - (5 * j) + 0.5f;
+                float y = 5 * heightMap[i, j];
+                map[i, j] = new Vector3(x, y, z);
+            }
+        }
+
+        //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //cube.transform.position = map[width / 4, height / 4];
+
+        FindObjectOfType<PlayerGrabber>().animalSelection.RandomPlacement(mapGenerator.seed, new Vector2(247.5f, -247.5f), map);
+        FindObjectOfType<PlayerGrabber>().vegetationSelection.RandomPlacement(mapGenerator.seed, new Vector2(247.5f, -247.5f), map);
+
         //raceStarted = false;
         //if (!paused)
         //{
@@ -54,24 +81,31 @@ public class RaceGameHandler : MonoBehaviour
         //    GenerateMap(true);
         //}
 
-        ai.transform.position = aiStartPos.position;
-        ai.transform.forward = aiStartPos.forward;
-        player.transform.position = playerStartPos.position;
-        player.transform.forward = playerStartPos.forward;
 
-        if (ai.GetComponent<AIFollow>().track.trackComplete)
+
+        if (hasAI)
         {
-            ai.GetComponent<AIFollow>().track.RestartRace();
+            ai.transform.position = aiStartPos.position;
+            ai.transform.forward = aiStartPos.forward;
+            player.transform.position = playerStartPos.position;
+            player.transform.forward = playerStartPos.forward;
+
+            if (ai.GetComponent<AIFollow>().track.trackComplete)
+            {
+                ai.GetComponent<AIFollow>().track.RestartRace();
+            }
+            else
+            {
+                ai.GetComponent<AIFollow>().RestartTrack();
+            }
         }
-        else
-        {
-            ai.GetComponent<AIFollow>().RestartTrack();
-        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        hudHandler.SetTimer(Utility.FormatTime(Time.time - timerStart));
         if (raceStarted)
         {
             player.gameObject.SetActive(true);
@@ -160,6 +194,7 @@ public class RaceGameHandler : MonoBehaviour
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         FindObjectOfType<PlayerGrabber>().ClearVegetation();
+        FindObjectOfType<PlayerGrabber>().ClearAnimals();
         StartLevel();
     }
     public void MainMenu()

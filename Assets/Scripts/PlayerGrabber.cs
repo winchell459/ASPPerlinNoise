@@ -20,7 +20,7 @@ public class PlayerGrabber : MonoBehaviour
     public bool debugging;
 
     public VegetationSelection vegetationSelection;
-    public List<GameObject> vegetation = new List<GameObject>();
+    public AnimalSelection animalSelection;
 
     public RaceGameHandler gameHandler;
 
@@ -29,7 +29,19 @@ public class PlayerGrabber : MonoBehaviour
 
     public void ClearVegetation()
     {
-        foreach (GameObject vege in vegetation) Destroy(vege);
+        //foreach (GameObject vege in vegetation) Destroy(vege);
+
+        for (int i = vegetationSelection.vegetation.Count - 1; i >= 0; i -= 1)
+        {
+            GameObject vege = vegetationSelection.vegetation[i];
+            vegetationSelection.vegetation.Remove(vege);
+            GameObject.Destroy(vege.gameObject);
+        }
+    }
+
+    public void ClearAnimals()
+    {
+        animalSelection.RemoveAllAnimals();
     }
     // Start is called before the first frame update
     void Start()
@@ -78,7 +90,7 @@ public class PlayerGrabber : MonoBehaviour
                     float randomRotation = Random.Range(0, 360);
                     vegetation.transform.Rotate(new Vector3(0, randomRotation, 0));
 
-                    this.vegetation.Add(vegetation);
+                    this.vegetationSelection.vegetation.Add(vegetation);
                 }
                 else if (hit.transform.CompareTag("Vegetation"))
                 {
@@ -104,7 +116,7 @@ public class PlayerGrabber : MonoBehaviour
                         if (placingPlayer)
                         {
                             car = player.transform;
-                            otherCar = ai.transform;
+                            if(ai) otherCar = ai.transform;
                         }
                         else if (placingAI)
                         {
@@ -162,6 +174,7 @@ public class PlayerGrabber : MonoBehaviour
 [System.Serializable]
 public class VegetationSelection
 {
+    public List<GameObject> vegetation = new List<GameObject>();
     public GameObject[] prefab;
     [SerializeField]
     public RangeAttribute scaleMultiplierRange = new RangeAttribute(2.5f, 10);
@@ -169,5 +182,133 @@ public class VegetationSelection
     {
         int index = UnityEngine.Random.Range(0, prefab.Length);
         return prefab[index];
+    }
+
+    public GameObject Random(System.Random random)
+    {
+        int index = random.Next(0, prefab.Length);
+        return prefab[index];
+    }
+
+    public int vegetationCount = 50;
+    public float minHeight = 5, maxHeight = 10;
+    public float maxRadius = 200;
+    public void RandomPlacement(int seed, Vector2 origin, Vector3[,] map)
+    {
+        System.Random random = new System.Random(seed);
+        int width = map.GetLength(0);
+        int height = map.GetLength(1);
+        int vegetationAdded = 0;
+        while (vegetationAdded < vegetationCount)
+        {
+            int i = random.Next(0, width);
+            int j = random.Next(0, height);
+            if (Vector2.Distance(origin, new Vector2(map[i, j].x, map[i, j].z)) < maxRadius)
+            {
+                GameObject veg = GameObject.Instantiate(Random(random));
+                veg.transform.position = map[i, j];
+
+                float randomScale = ((float)random.NextDouble()) *(scaleMultiplierRange.max - scaleMultiplierRange.min) + scaleMultiplierRange.min;
+                veg.transform.localScale *= randomScale;
+
+                float randomRotation = random.Next(0, 360);
+                veg.transform.Rotate(new Vector3(0, randomRotation, 0));
+
+                vegetation.Add(veg);
+                vegetationAdded += 1;
+            }
+            
+        }
+    }
+}
+
+[System.Serializable]
+public class AnimalSelection
+{
+    public Animal chickenPrefab, spiderPrefab;
+    
+    public List<Spider> spiders;
+    public List<Chicken> chickens;
+
+    public void AddAnimal(Animal animal)
+    {
+        if (animal.animalType == Animal.AnimalType.spider)
+        {
+            spiders.Add((Spider)animal);
+            GameObject.FindObjectOfType<HUDHandler>().SetCounts(0, 1);
+        }
+        else if (animal.animalType == Animal.AnimalType.chicken)
+        {
+            chickens.Add((Chicken)animal);
+            GameObject.FindObjectOfType<HUDHandler>().SetCounts(1, 0);
+        }
+    }
+
+    public void RemoveAnimal(Animal animal)
+    {
+        if (animal.animalType == Animal.AnimalType.spider)
+        {
+            spiders.Remove((Spider)animal);
+            GameObject.FindObjectOfType<HUDHandler>().SetCounts(0, -1);
+        }
+
+        else if (animal.animalType == Animal.AnimalType.chicken)
+        {
+            chickens.Remove((Chicken)animal);
+            GameObject.FindObjectOfType<HUDHandler>().SetCounts(-1, 0);
+        }
+    }
+
+    public void RemoveAllAnimals()
+    {
+        for (int i = spiders.Count - 1; i >= 0; i-=1 )
+        {
+            Spider spider = spiders[i];
+            spiders.Remove(spider);
+            GameObject.Destroy(spider.gameObject);
+        }
+        for (int i = chickens.Count - 1; i >= 0; i -= 1)
+        {
+            Chicken chicken = chickens[i];
+            chickens.Remove(chicken);
+            GameObject.Destroy(chicken.gameObject);
+        }
+    }
+
+    public int chickenCount = 10, spiderCount = 3;
+    public float maxRadius = 200;
+    public void RandomPlacement(int seed, Vector2 origin, Vector3[,] map)
+    {
+        System.Random random = new System.Random(seed);
+        int width = map.GetLength(0);
+        int height = map.GetLength(1);
+        float chickensAdded = 0;
+        float spidersAdded = 0;
+
+        while(chickensAdded < chickenCount)
+        {
+            int i = random.Next(0, width);
+            int j = random.Next(0, height);
+            
+            if(Vector2.Distance(origin, new Vector2(map[i,j].x, map[i,j].z)) < maxRadius)
+            {
+                Chicken chicken = GameObject.Instantiate(chickenPrefab, map[i, j], Quaternion.identity).GetComponent<Chicken>();
+                AddAnimal(chicken);
+                chickensAdded += 1;
+            }
+            
+        }
+
+        while(spidersAdded < spiderCount)
+        {
+            int i = random.Next(0, width);
+            int j = random.Next(0, height);
+            if (Vector2.Distance(origin, new Vector2(map[i, j].x, map[i, j].z)) < maxRadius)
+            {
+                Spider spider = GameObject.Instantiate(spiderPrefab, map[i, j], Quaternion.identity).GetComponent<Spider>();
+                AddAnimal(spider);
+                spidersAdded += 1;
+            }
+        }
     }
 }

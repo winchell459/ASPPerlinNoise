@@ -146,7 +146,7 @@ public class Spider : Animal
 
     private void SetRandomState()
     {
-        int rand = Random.Range(0, 2);
+        int rand = random.Next(0, 2);//Random.Range(0, 2);
         stateStartTime = Time.time;
         state = (States)rand;
 
@@ -186,6 +186,8 @@ public class Spider : Animal
     protected void Duplicate()
     {
         lastBirth = Time.time;
-        Instantiate(gameObject, transform.position + transform.forward * (-1), Quaternion.identity);
+        Animal animal = Instantiate(gameObject, transform.position + transform.forward * (-1), Quaternion.identity).GetComponent<Animal>();
+        FindObjectOfType<PlayerGrabber>().animalSelection.AddAnimal(animal);
+        
     }
 }

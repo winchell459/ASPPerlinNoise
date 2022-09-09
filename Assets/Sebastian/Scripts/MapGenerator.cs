@@ -69,6 +69,7 @@ namespace Sebastian
         public Noise.NormalizeMode normalizeMode;
         public bool debugLoops;
         public MemoryScriptableObject aspMemory;
+        public float[,] heightMap;
         public void GenerateMap()
         {
             float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale,octaves,persistance,lacunarity, offset, normalizeMode);
@@ -95,6 +96,10 @@ namespace Sebastian
                     }
                 }
             }
+
+            SetHeightMap(noiseMap);
+
+
             if (debugLoops)
             {
                 trackReady = false;
@@ -218,7 +223,20 @@ namespace Sebastian
                 Debug.Log(loopList);
             }
         }
+        void SetHeightMap(float[,] noiseMap)
+        {
+            heightMap = new float[noiseMap.GetLength(0), noiseMap.GetLength(1)];
+            for(int i = 0; i < noiseMap.GetLength(0); i += 1)
+            {
+                for(int j = 0; j < noiseMap.GetLength(1); j += 1)
+                {
+                    heightMap[i, j] = meshHeightMultiplier * meshHeightCurve.Evaluate(noiseMap[i, j]);
+                }
+            }
+        }
     }
+
+   
 }
 
 [System.Serializable]

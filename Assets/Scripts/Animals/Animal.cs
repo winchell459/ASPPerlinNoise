@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Animal : MonoBehaviour
 {
+    public AnimalType animalType;
+    public enum AnimalType { chicken, spider}
     protected float stateStartTime = float.MinValue;
 
     public Animator anim;
@@ -15,11 +17,25 @@ public class Animal : MonoBehaviour
     public int maxPopulationDensity = 5;
     public float populationRadius = 5;
 
+    protected int seed { get { return FindObjectOfType<Sebastian.MapGenerator>().seed; } }
+    protected System.Random random
+    {
+        get
+        {
+            if(randomObj == null)
+            {
+                randomObj = new System.Random(seed);
+            }
+            return randomObj;
+        }
+    }
+    private static System.Random randomObj;
+
     protected void Turn(bool random)
     {
         if (random)
         {
-            float dirAngle = Random.Range(0, 360);
+            float dirAngle = this.random.Next(0,360);//Random.Range(0, 360);
             transform.eulerAngles += Vector3.up * dirAngle;
         }
     }
@@ -46,6 +62,7 @@ public class Animal : MonoBehaviour
         }
         else
         {
+            FindObjectOfType<PlayerGrabber>().animalSelection.RemoveAnimal(this);
             DieState();
             return true;
         }

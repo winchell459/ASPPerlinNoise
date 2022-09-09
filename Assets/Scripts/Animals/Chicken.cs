@@ -76,7 +76,7 @@ public class Chicken : Animal
     }
     private void SetRandomState()
     {
-        int rand = Random.Range(0, 5);
+        int rand = random.Next(0, 5);//Random.Range(0, 5);
         stateStartTime = Time.time;
         state = (States)rand;
 
@@ -132,7 +132,9 @@ public class Chicken : Animal
         if (duplicate)
         {
             lastBirth = Time.time;
-            Instantiate(gameObject, transform.position + transform.forward * (-1), Quaternion.identity);
+            Animal animal = Instantiate(gameObject, transform.position + transform.forward * (-1), Quaternion.identity).GetComponent<Animal>();
+            FindObjectOfType<PlayerGrabber>().animalSelection.AddAnimal(animal);
+            
         }
         
 
