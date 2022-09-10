@@ -47,6 +47,6 @@ public class HUDHandler : MonoBehaviour
             chickenCount += chickenAdded;
             chickenDead -= chickenAdded;
         }
-        if (spiderAdded > 0) spiderCount += spiderAdded;
+        spiderCount += spiderAdded;
     }
 }

@@ -17,6 +17,11 @@ public class Animal : MonoBehaviour
     public int maxPopulationDensity = 5;
     public float populationRadius = 5;
 
+    public AudioSource audioSource;
+    public AudioClip[] audioVariety;
+    public float audioRate = 5;
+    protected float lastAudioTime = float.MinValue;
+
     protected int seed { get { return FindObjectOfType<Sebastian.MapGenerator>().seed; } }
     protected System.Random random
     {
@@ -82,5 +87,24 @@ public class Animal : MonoBehaviour
     {
         yield return null;
         Destroy(gameObject);
+    }
+
+    protected virtual void HandleAudio()
+    {
+        if(lastAudioTime + audioRate < Time.time)
+        {
+            Debug.Log("Audio Time");
+            lastAudioTime = Time.time;
+            if(random.Next(0,3)< 1)
+            {
+                Debug.Log("Playing 0");
+                if (audioVariety.Length > 0)
+                {
+                    Debug.Log("Playing");
+                    audioSource.clip = audioVariety[random.Next(0, audioVariety.Length)];
+                    audioSource.Play();
+                }
+            }
+        }
     }
 }

@@ -64,8 +64,7 @@ public class RaceGameHandler : MonoBehaviour
         //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         //cube.transform.position = map[width / 4, height / 4];
 
-        FindObjectOfType<PlayerGrabber>().animalSelection.RandomPlacement(mapGenerator.seed, new Vector2(247.5f, -247.5f), map);
-        FindObjectOfType<PlayerGrabber>().vegetationSelection.RandomPlacement(mapGenerator.seed, new Vector2(247.5f, -247.5f), map);
+        
 
         //raceStarted = false;
         //if (!paused)
@@ -98,6 +97,11 @@ public class RaceGameHandler : MonoBehaviour
             {
                 ai.GetComponent<AIFollow>().RestartTrack();
             }
+        }
+        else
+        {
+            FindObjectOfType<PlayerGrabber>().animalSelection.RandomPlacement(mapGenerator.seed, new Vector2(247.5f, -247.5f), map);
+            FindObjectOfType<PlayerGrabber>().vegetationSelection.RandomPlacement(mapGenerator.seed, new Vector2(247.5f, -247.5f), map);
         }
         
     }

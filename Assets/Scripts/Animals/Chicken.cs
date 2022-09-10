@@ -37,6 +37,7 @@ public class Chicken : Animal
     void Update()
     {
         HandleStates();
+        HandleAudio();
     }
 
     void HandleStates()
