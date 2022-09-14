@@ -5,7 +5,7 @@ using UnityEngine;
 public class Animal : MonoBehaviour
 {
     public AnimalType animalType;
-    public enum AnimalType { chicken, spider}
+    public enum AnimalType { chicken, spider, dog}
     protected float stateStartTime = float.MinValue;
 
     public Animator anim;
@@ -107,4 +107,15 @@ public class Animal : MonoBehaviour
             }
         }
     }
+}
+
+public class Stats
+{
+    public int level = 1;
+    public int strength; //heath and damage
+    public int dexterity; //speed and agility
+    public int constitution; //desirablity or gestation duration
+    public int intellegence; //memory of food and water locations and rejecting mates
+    public int wisdom; //sensory distance and perception of spiders before attack
+    public int charisma; //desirablility
 }

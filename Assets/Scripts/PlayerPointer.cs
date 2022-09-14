@@ -25,7 +25,7 @@ public class PlayerPointer : MonoBehaviour
     void Update()
     {
         SetPointer();
-
+        //Debug.Log(transform.name);
     }
 
     protected virtual void SetPointer()
@@ -33,20 +33,20 @@ public class PlayerPointer : MonoBehaviour
         
         if (Physics.Raycast(new Ray(RightHandController.position, RightHandController.forward), out hit, 500, layerMask))
         {
-            if (hit.transform.CompareTag("Track"))
-            {
+        //    if (hit.transform.CompareTag("Track"))
+        //    {
                 targetFound = true;
                 StartCoroutine(SmoothRigWieght(1));
                 RightHand_target.position = hit.point;
                 RightHand_target.forward = Vector3.up;
                 RightHand_target.right = (RightHand_target.position - transform.position).normalized;
 
-            }
-            else
-            {
-                targetFound = false;
-                StartCoroutine(SmoothRigWieght(0));
-            }
+            //}
+            //else
+            //{
+            //    targetFound = false;
+            //    StartCoroutine(SmoothRigWieght(0));
+            //}
         }
         else
         {

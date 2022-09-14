@@ -18,6 +18,7 @@ public class PlayerGun : PlayerPointer
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(transform.name);
         SetPointer();
         if (targetFound && inputManager.rightTriggerUp() || Input.GetMouseButtonUp(0))
         {

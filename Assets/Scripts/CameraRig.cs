@@ -105,7 +105,7 @@ public class CameraRig : MonoBehaviour
        
         }
 
-        if(!paused && inputManager.UISelection() || inputManager.UISelectionUp())
+        if(!paused && inputManager.UISelection() /*|| inputManager.UISelectionUp()*/)
         {
             followPlayerForward = !followPlayerForward;
             if (followPlayerForward)
