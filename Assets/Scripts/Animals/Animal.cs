@@ -72,6 +72,7 @@ public class Animal : MonoBehaviour
             return true;
         }
     }
+    public virtual void AttackAnimTrigger() { }
 
     protected virtual void HitState()
     {

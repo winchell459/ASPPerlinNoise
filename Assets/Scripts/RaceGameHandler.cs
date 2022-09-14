@@ -82,7 +82,7 @@ public class RaceGameHandler : MonoBehaviour
 
 
 
-        if (hasAI)
+        if (hasAI && FindObjectOfType<AIFollow>())
         {
             ai.transform.position = aiStartPos.position;
             ai.transform.forward = aiStartPos.forward;

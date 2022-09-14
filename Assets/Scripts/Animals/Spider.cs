@@ -153,7 +153,7 @@ public class Spider : Animal
         if (state == States.run) Turn(true);
     }
 
-    public void AttackAnimTrigger()
+    public override void AttackAnimTrigger()
     {
         if (prey)
         {

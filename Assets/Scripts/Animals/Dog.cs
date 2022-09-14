@@ -6,8 +6,9 @@ using UnityEngine;
 public class Dog : Animal
 {
     public float deceleration = 1;
-    public float runSpeed = 10;
-    public float runAcceleration = 5;
+    public float walkSpeed = 10;
+    public float runSpeed = 20;
+    public float runAcceleration = 200;
 
     public float walkTime = 3;
     public float runTime = 3;
@@ -15,6 +16,7 @@ public class Dog : Animal
 
     public float huntingRadius = 20;
     public float attackRadius = 3;
+    public float attackWalkRadius = 2;
     public float attackIdleRadius = 1;
 
     public enum States
@@ -53,13 +55,18 @@ public class Dog : Animal
         {
             case States.idle:
                 SetStates(false, false, 0, false);
+                Move(0, -deceleration);
+                if (Time.time > stateStartTime + idleTime) SetRandomState();
                 break;
             case States.walk:
                 SetStates(false, false, 0.5f, false);
+                Move(walkSpeed, runAcceleration);
+                if (Time.time > stateStartTime + walkTime) SetRandomState();
                 break;
             case States.run:
                 SetStates(false, false, 1.1f, false);
-                
+                Move(runSpeed, runAcceleration);
+                if (Time.time > stateStartTime + runTime) SetRandomState();
                 break;
             case States.attackIdle:
                 SetStates(false, true, 0, false);
@@ -105,6 +112,15 @@ public class Dog : Animal
         anim.SetBool("die", die);
     }
 
+    private void SetRandomState()
+    {
+        int rand = random.Next(0, 3);
+        stateStartTime = Time.time;
+        state = (States)rand;
+
+        if (state == States.run) Turn(true);
+    }
+
     Animal prey = null;
     private void HandleHunting()
     {
@@ -118,6 +134,10 @@ public class Dog : Animal
         if (preyDistance < attackIdleRadius)
         {
             state = States.attackIdle;
+        }
+        else if (preyDistance < attackWalkRadius)
+        {
+            state = States.attackWalk;
         }
         else if (preyDistance < attackRadius)
         {
@@ -158,5 +178,29 @@ public class Dog : Animal
             
         }
         return prey;
+    }
+
+    public override void AttackAnimTrigger()
+    {
+        if (prey)
+        {
+            float preyDistance = Vector3.Distance(prey.transform.position, transform.position);
+            bool kill = false;
+            if (preyDistance < attackIdleRadius)
+            {
+                kill = prey.Hit(2);
+            }
+            else if (preyDistance < attackRadius)
+            {
+                kill = prey.Hit(1);
+            }
+
+            
+        }
+        else
+        {
+            SetRandomState();
+        }
+
     }
 }

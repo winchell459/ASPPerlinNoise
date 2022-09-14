@@ -128,7 +128,7 @@ public class PlayerGrabber : MonoBehaviour
                         car.forward = Utility.CopyForward(otherCar);
                         startPos.position = car.position;
                         startPos.forward = car.forward;
-                        if (placingAI) car.GetComponent<AIFollow>().RestartTrack();
+                        if (placingAI && FindObjectOfType<AIFollow>()) car.GetComponent<AIFollow>().RestartTrack();
                         //gameHandler.ResetPlayerVertical(car);
                     }
                 }
@@ -143,7 +143,7 @@ public class PlayerGrabber : MonoBehaviour
             hasPlayer = false;
             hook.connectedBody = null;
             interruptCameraRig.interruptCameraRig = false;
-            interruptCarUserControl.interruptCarUserControl = false;
+            if (interruptCarUserControl) interruptCarUserControl.interruptCarUserControl = false;
         }
 
     }
@@ -163,7 +163,7 @@ public class PlayerGrabber : MonoBehaviour
         if (hasPlayer && inputManager.PlayerSelection())
         {
             interruptCameraRig.interruptCameraRig = true;
-            interruptCarUserControl.interruptCarUserControl = true;
+            if(interruptCarUserControl)interruptCarUserControl.interruptCarUserControl = true;
             hook.GetComponent<Rigidbody>().MovePosition(grabber.position + player.transform.up * hookLength + grabber.forward.normalized * radius);
             //player.GetComponent<Rigidbody>().useGravity = !player.GetComponent<Rigidbody>().useGravity;
         }
