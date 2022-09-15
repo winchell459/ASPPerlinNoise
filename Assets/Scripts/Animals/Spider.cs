@@ -35,6 +35,7 @@ public class Spider : Animal
     // Start is called before the first frame update
     void Start()
     {
+        spawnPoint = transform.position;
         stateStartTime = Time.time;
         lastBirth = Time.time;
     }
@@ -42,17 +43,35 @@ public class Spider : Animal
     // Update is called once per frame
     void Update()
     {
-        HandleHunting();
-        HandleStates(); 
+        HandleMapFalloff();
+        if (!dead)
+        {
+            if (!enemy || enemy.dead)
+            {
+                prey = FindClosestAnimal();
+                HandleHunting(ref prey);
+            }
+            else 
+            {
+                HandleHunting(ref enemy);
+            }
+
+            
+        }
+        HandleStates();
     }
     Animal prey = null;
-    private void HandleHunting()
+    [SerializeField] Animal enemy = null;
+    Animal hunting = null;
+
+    private void HandleHunting(ref Animal hunting)
     {
-        prey = FindClosestAnimal();
+        
         float preyDistance = float.MaxValue;
-        if (prey )
+        if (hunting)
         {
-            preyDistance = Vector3.Distance(prey.transform.position, transform.position);
+            preyDistance = Vector3.Distance(hunting.transform.position, transform.position);
+            this.hunting = hunting;
         }
 
         if(preyDistance < attackIdleRadius)
@@ -65,12 +84,13 @@ public class Spider : Animal
         else if(preyDistance < huntingRadius)
         {
             state = States.run;
-            Vector3 forward = prey.transform.position - transform.position;
+            Vector3 forward = hunting.transform.position - transform.position;
             transform.forward = new Vector3(forward.x, 0, forward.z);
         }
         else
         {
-            prey = null;
+            hunting = null;
+            this.hunting = null;
         }
     }
 
@@ -82,7 +102,7 @@ public class Spider : Animal
         {
             if (prey)
             {
-                if(Vector3.Distance(transform.position, prey.transform.position) > Vector3.Distance(transform.position, chicken.transform.position))
+                if(!chicken.dead && Vector3.Distance(transform.position, prey.transform.position) > Vector3.Distance(transform.position, chicken.transform.position))
                 {
                     prey = chicken;
                 }
@@ -150,22 +170,22 @@ public class Spider : Animal
         stateStartTime = Time.time;
         state = (States)rand;
 
-        if (state == States.run) Turn(true);
+        if (state == States.run) Turn(true, transform.forward);
     }
 
     public override void AttackAnimTrigger()
     {
-        if (prey)
+        if (hunting)
         {
-            float preyDistance = Vector3.Distance(prey.transform.position, transform.position);
+            float preyDistance = Vector3.Distance(hunting.transform.position, transform.position);
             bool kill = false;
             if (preyDistance < attackIdleRadius)
             {
-                kill = prey.Hit(2);
+                kill = hunting.Hit(2,transform);
             }
             else if (preyDistance < attackRadius)
             {
-                kill = prey.Hit(1);
+                kill = hunting.Hit(1, transform);
             }
 
             if (kill) killCount += 1;
@@ -182,6 +202,17 @@ public class Spider : Animal
         }
         
     }
+    protected override void HitState(Transform source)
+    {
+        if (state == States.idle || state == States.attackIdle) state = States.hitIdle;
+        else if (state == States.attackRun || state == States.run) state = States.hitRun;
+
+        if (source.GetComponent<Dog>())
+        {
+            enemy = source.GetComponent<Dog>();
+            
+        }
+    }
 
     protected void Duplicate()
     {
@@ -189,5 +220,12 @@ public class Spider : Animal
         Animal animal = Instantiate(gameObject, transform.position + transform.forward * (-1), Quaternion.identity).GetComponent<Animal>();
         FindObjectOfType<PlayerGrabber>().animalSelection.AddAnimal(animal);
         
+    }
+
+    protected override void DieState()
+    {
+        state = States.hitDie;
+        //Destroy(GetComponent<Rigidbody>());
+        //GetComponent<Collider>().enabled = false;
     }
 }

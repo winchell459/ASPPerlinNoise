@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.transform.GetComponent<Animal>())
         {
-            collision.transform.GetComponent<Animal>().Hit(1);
+            collision.transform.GetComponent<Animal>().Hit(1, transform);
         }
         Destroy(gameObject);
     }

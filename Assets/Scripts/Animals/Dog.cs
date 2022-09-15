@@ -38,13 +38,15 @@ public class Dog : Animal
     // Start is called before the first frame update
     void Start()
     {
+        spawnPoint = transform.position;
         stateStartTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-        HandleHunting();
+        HandleMapFalloff();
+        if (!dead) HandleHunting();
         HandleStates();
         HandleAudio();
     }
@@ -81,16 +83,44 @@ public class Dog : Animal
                 state = States.run;
                 break;
             case States.hitIdle:
-                SetStates(true, false, 0, false);
-                state = States.idle;
+                if (dead)
+                {
+                    SetStates(true, false, 0, true);
+                    state = States.die;
+                }
+                else
+                {
+                    SetStates(true, false, 0, false);
+                    state = States.idle;
+                }
+                
                 break;
             case States.hitWalk:
-                SetStates(true, false, 0.5f, false);
-                state = States.walk;
+                if (dead)
+                {
+                    SetStates(true, false, 0.5f, true);
+                    state = States.die;
+                }
+                else
+                {
+                    SetStates(true, false, 0.5f, false);
+                    state = States.walk;
+                }
+                
                 break;
             case States.hitRun:
-                SetStates(true, false, 1.1f, false);
-                state = States.run;
+                if (dead)
+                {
+                    SetStates(true, false, 1.1f, true);
+                    state = States.die;
+
+                }
+                else
+                {
+                    SetStates(true, false, 1.1f, false);
+                    state = States.run;
+                }
+                
                 break;
             //case States.dizzy:
             //    break;
@@ -107,7 +137,7 @@ public class Dog : Animal
     void SetStates(bool hit, bool attack, float velocity, bool die)
     {
         if (hit) anim.SetTrigger("hit");
-        if (attack) anim.SetTrigger("attack");
+        anim.SetBool("attack", attack);
         anim.SetFloat("velocity", velocity);
         anim.SetBool("die", die);
     }
@@ -118,7 +148,7 @@ public class Dog : Animal
         stateStartTime = Time.time;
         state = (States)rand;
 
-        if (state == States.run) Turn(true);
+        if (state == States.run) Turn(true, transform.forward);
     }
 
     Animal prey = null;
@@ -161,7 +191,7 @@ public class Dog : Animal
         Animal[] animals = FindObjectsOfType<Animal>();
         foreach (Animal animal in animals)
         {
-            if(animal.animalType == animalType)
+            if(!animal.dead && animal.animalType == animalType)
             {
                 if (prey)
                 {
@@ -188,11 +218,11 @@ public class Dog : Animal
             bool kill = false;
             if (preyDistance < attackIdleRadius)
             {
-                kill = prey.Hit(2);
+                kill = prey.Hit(2, transform);
             }
             else if (preyDistance < attackRadius)
             {
-                kill = prey.Hit(1);
+                kill = prey.Hit(1, transform);
             }
 
             
@@ -202,5 +232,15 @@ public class Dog : Animal
             SetRandomState();
         }
 
+    }
+
+    protected override void DieState()
+    {
+        if (state == States.attackIdle || state == States.idle || state == States.hitIdle) state = States.hitIdle;
+        if (state == States.attackWalk || state == States.walk || state == States.hitWalk) state = States.hitWalk;
+        if (state == States.attackRun || state == States.run || state == States.hitRun) state = States.hitRun;
+        
+        //Destroy(GetComponent<Rigidbody>());
+        //GetComponent<Collider>().enabled = false;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Animal : MonoBehaviour
 {
+    public Vector3 spawnPoint;
     public AnimalType animalType;
     public enum AnimalType { chicken, spider, dog}
     protected float stateStartTime = float.MinValue;
@@ -36,12 +37,16 @@ public class Animal : MonoBehaviour
     }
     private static System.Random randomObj;
 
-    protected void Turn(bool random)
+    protected void Turn(bool random, Vector3 direction)
     {
         if (random)
         {
             float dirAngle = this.random.Next(0,360);//Random.Range(0, 360);
             transform.eulerAngles += Vector3.up * dirAngle;
+        }
+        else
+        {
+            transform.forward = direction;
         }
     }
 
@@ -55,18 +60,20 @@ public class Animal : MonoBehaviour
         else if (target > vel && acc < 0) rb.velocity = transform.forward * target + rb.velocity.y * Vector3.up;
     }
 
-    public bool Hit(float damage)
+    public bool dead = false;
+    public bool Hit(float damage, Transform source)
     {
         if (health <= 0) return false;
         health -= damage;
         if (health > 0)
         {
-            HitState();
+            HitState(source);
             stateStartTime = Time.time;
             return false;
         }
         else
         {
+            dead = true;
             FindObjectOfType<PlayerGrabber>().animalSelection.RemoveAnimal(this);
             DieState();
             return true;
@@ -74,20 +81,20 @@ public class Animal : MonoBehaviour
     }
     public virtual void AttackAnimTrigger() { }
 
-    protected virtual void HitState()
+    protected virtual void HitState(Transform source)
     {
         //state = States.running;
     }
 
     protected virtual void DieState()
     {
-        StartCoroutine(Die());
+        StartCoroutine(Die(0));
     }
 
-    protected IEnumerator Die()
+    protected IEnumerator Die(float wait)
     {
         yield return null;
-        Destroy(gameObject);
+        Destroy(gameObject,wait);
     }
 
     protected virtual void HandleAudio()
@@ -107,6 +114,29 @@ public class Animal : MonoBehaviour
                 }
             }
         }
+    }
+    float resetYOffset = 1;
+    protected virtual void HandleMapFalloff()
+    {
+        if (transform.position.y < -10)
+        {
+            transform.position = spawnPoint + Vector3.up * resetYOffset;
+            resetYOffset *= 1.1f;
+        }
+
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            HandleWater(other);
+        }
+    }
+    protected virtual void HandleWater(Collider water)
+    {
+
+        Move(-rb.mass * 10, -rb.mass * 100);
     }
 }
 

@@ -36,6 +36,7 @@ public class RaceGameHandler : MonoBehaviour
         trackHeight = player.position.y;
         //StartLevel();
         GenerateMap(mapGenerator.seed);
+        mapGenerator.AddMesh();
     }
 
     public Transform playerStartPos, aiStartPos;

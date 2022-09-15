@@ -191,7 +191,7 @@ public class VegetationSelection
     }
 
     public int vegetationCount = 50;
-    public float minHeight = 5, maxHeight = 10;
+    public float minHeight = 0.26f, maxHeight = 0.75f;
     public float maxRadius = 200;
     public void RandomPlacement(int seed, Vector2 origin, Vector3[,] map)
     {
@@ -290,7 +290,8 @@ public class AnimalSelection
             int i = random.Next(0, width);
             int j = random.Next(0, height);
             
-            if(Vector2.Distance(origin, new Vector2(map[i,j].x, map[i,j].z)) < maxRadius)
+            //if(Vector2.Distance(origin, new Vector2(map[i,j].x, map[i,j].z)) < maxRadius)
+            if(map[i,j].y > 1)
             {
                 Chicken chicken = GameObject.Instantiate(chickenPrefab, map[i, j], Quaternion.identity).GetComponent<Chicken>();
                 AddAnimal(chicken);
@@ -303,7 +304,8 @@ public class AnimalSelection
         {
             int i = random.Next(0, width);
             int j = random.Next(0, height);
-            if (Vector2.Distance(origin, new Vector2(map[i, j].x, map[i, j].z)) < maxRadius)
+            //if (Vector2.Distance(origin, new Vector2(map[i, j].x, map[i, j].z)) < maxRadius)
+            if (map[i, j].y > 1)
             {
                 Spider spider = GameObject.Instantiate(spiderPrefab, map[i, j], Quaternion.identity).GetComponent<Spider>();
                 AddAnimal(spider);

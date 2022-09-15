@@ -29,6 +29,7 @@ public class Chicken : Animal
     // Start is called before the first frame update
     void Start()
     {
+        spawnPoint = transform.position;
         stateStartTime = Time.time;
         lastBirth = Time.time;
     }
@@ -36,6 +37,7 @@ public class Chicken : Animal
     // Update is called once per frame
     void Update()
     {
+        HandleMapFalloff();
         HandleStates();
         HandleAudio();
     }
@@ -81,7 +83,7 @@ public class Chicken : Animal
         stateStartTime = Time.time;
         state = (States)rand;
 
-        if (state == States.walking) Turn(true);
+        if (state == States.walking) Turn(true, transform.forward);
     }
     private void SetStates(bool walk, bool run, bool eat, bool turnHead)
     {
@@ -93,8 +95,10 @@ public class Chicken : Animal
 
 
 
-    protected override void HitState()
+    protected override void HitState(Transform source)
     {
+
+        Turn(false, new Vector3(transform.position.x - source.position.x, 0, transform.position.z - source.position.z));
         state = States.running;
     }
 
