@@ -19,6 +19,8 @@ public class Dog : Animal
     public float attackWalkRadius = 2;
     public float attackIdleRadius = 1;
 
+    public float maxHealth = 10;
+    public Transform player;
     public enum States
     {
         idle,
@@ -40,15 +42,21 @@ public class Dog : Animal
     {
         spawnPoint = transform.position;
         stateStartTime = Time.time;
+        aiHud.Display();
     }
 
     // Update is called once per frame
     void Update()
     {
         HandleMapFalloff();
-        if (!dead) HandleHunting();
+        if (!dead)
+        {
+            HandleHunting();
+
+        }
         HandleStates();
         HandleAudio();
+        aiHud.Display();
     }
 
     private void HandleStates()
@@ -56,6 +64,7 @@ public class Dog : Animal
         switch (state)
         {
             case States.idle:
+                
                 SetStates(false, false, 0, false);
                 Move(0, -deceleration);
                 if (Time.time > stateStartTime + idleTime) SetRandomState();
@@ -142,13 +151,23 @@ public class Dog : Animal
         anim.SetBool("die", die);
     }
 
+    bool followPlayer { get { return Vector3.Distance(player.transform.position, transform.position) > followPlayerDistance; } }
+    float followPlayerDistance = 30;
     private void SetRandomState()
     {
         int rand = random.Next(0, 3);
         stateStartTime = Time.time;
         state = (States)rand;
 
-        if (state == States.run) Turn(true, transform.forward);
+        if(state == States.idle)
+        {
+            if (health < maxHealth && food > 0)
+            {
+                food -= 1;
+                health += 1;
+            }
+        } 
+        if (state == States.walk) Turn(followPlayer? false:true, new Vector3(player.position.x - transform.position.x,0, player.position.z - transform.position.z).normalized);
     }
 
     Animal prey = null;

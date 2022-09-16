@@ -11,8 +11,10 @@ public class Animal : MonoBehaviour
 
     public Animator anim;
     public Rigidbody rb;
+    public AIHud aiHud;
 
     public float health = 5;
+    public float food = 0;
     public float birthRate = 5;
     protected float lastBirth = float.MinValue;
     public int maxPopulationDensity = 5;
@@ -91,7 +93,7 @@ public class Animal : MonoBehaviour
         StartCoroutine(Die(0));
     }
 
-    protected IEnumerator Die(float wait)
+    protected virtual IEnumerator Die(float wait)
     {
         yield return null;
         Destroy(gameObject,wait);

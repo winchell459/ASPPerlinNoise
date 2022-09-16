@@ -227,5 +227,21 @@ public class Spider : Animal
         state = States.hitDie;
         //Destroy(GetComponent<Rigidbody>());
         //GetComponent<Collider>().enabled = false;
+        StartCoroutine(Die(shrinkTime));
+    }
+
+    public float shrinkTime = 3;
+    public float shrinkPercent = 100;
+    protected override IEnumerator Die(float wait)
+    {
+        float shrinkStart = Time.time;
+        Vector3 shrinkSteps = ((shrinkPercent / 100f) / shrinkTime) * transform.localScale;
+        while (wait + shrinkStart > Time.time)
+        {
+            transform.localScale -= shrinkSteps * Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 }
