@@ -188,7 +188,11 @@ public class Spider : Animal
                 kill = hunting.Hit(1, transform);
             }
 
-            if (kill) killCount += 1;
+            if (kill)
+            {
+                killCount += 1;
+                experience += prey.GetComponent<Animal>().experience;
+            }
 
             if(killCount >= killCountBirthRate)
             {

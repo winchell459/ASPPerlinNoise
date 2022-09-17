@@ -23,7 +23,7 @@ public class AIHud : MonoBehaviour
 
     public void Display()
     {
-        textDisplay.text = $"H: {animal.health} | F: {animal.food}";
+        textDisplay.text = $" Health: {animal.health}/{((Dog)animal).maxHealth}  \n Food: {animal.food}/{((Dog)animal).maxFood} \n Exp: {animal.experience}";
         transform.forward = transform.position - target.position;
     }
 }

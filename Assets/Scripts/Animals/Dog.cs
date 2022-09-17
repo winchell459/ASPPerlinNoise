@@ -20,6 +20,7 @@ public class Dog : Animal
     public float attackIdleRadius = 1;
 
     public float maxHealth = 10;
+    public float maxFood = 10;
     public Transform player;
     public enum States
     {
@@ -152,7 +153,7 @@ public class Dog : Animal
     }
 
     bool followPlayer { get { return Vector3.Distance(player.transform.position, transform.position) > followPlayerDistance; } }
-    float followPlayerDistance = 30;
+    [SerializeField]float followPlayerDistance = 30;
     private void SetRandomState()
     {
         int rand = random.Next(0, 3);
@@ -173,35 +174,13 @@ public class Dog : Animal
     Animal prey = null;
     private void HandleHunting()
     {
-        prey = FindClosestAnimal(AnimalType.spider);
-        float preyDistance = float.MaxValue;
-        if (prey)
+        prey = CheckClosestPrey(FindClosestAnimal(AnimalType.spider));
+        if(!prey && health < maxHealth && food <= maxFood /*&& random.Next(0, (int)(maxHealth - health) + 1) < 1*/)
         {
-            preyDistance = Vector3.Distance(prey.transform.position, transform.position);
+            prey = CheckClosestPrey(FindClosestAnimal(AnimalType.chicken));
         }
+            
 
-        if (preyDistance < attackIdleRadius)
-        {
-            state = States.attackIdle;
-        }
-        else if (preyDistance < attackWalkRadius)
-        {
-            state = States.attackWalk;
-        }
-        else if (preyDistance < attackRadius)
-        {
-            state = States.attackRun;
-        }
-        else if (preyDistance < huntingRadius)
-        {
-            state = States.run;
-            Vector3 forward = prey.transform.position - transform.position;
-            transform.forward = new Vector3(forward.x, 0, forward.z);
-        }
-        else
-        {
-            prey = null;
-        }
     }
 
     Animal FindClosestAnimal(Animal.AnimalType animalType)
@@ -229,6 +208,41 @@ public class Dog : Animal
         return prey;
     }
 
+    Animal CheckClosestPrey(Animal prey)
+    {
+        float preyDistance = float.MaxValue;
+        if (prey)
+        {
+            preyDistance = Vector3.Distance(prey.transform.position, transform.position);
+        }
+
+        if (preyDistance < attackIdleRadius)
+        {
+            state = States.attackIdle;
+        }
+        else if (preyDistance < attackWalkRadius)
+        {
+            state = States.attackWalk;
+        }
+        else if (preyDistance < attackRadius)
+        {
+            state = States.attackRun;
+        }
+        else if (preyDistance < huntingRadius)
+        {
+            state = States.run;
+            Vector3 forward = prey.transform.position - transform.position;
+            transform.forward = new Vector3(forward.x, 0, forward.z);
+        }
+        else
+        {
+            prey = null;
+
+        }
+
+        return prey;
+    }
+
     public override void AttackAnimTrigger()
     {
         if (prey)
@@ -243,7 +257,15 @@ public class Dog : Animal
             {
                 kill = prey.Hit(1, transform);
             }
-
+            if (kill && prey.GetComponent<Chicken>())
+            {
+                food += 1;
+                experience += prey.GetComponent<Animal>().experience;
+            }
+            else if (kill && prey.GetComponent<Spider>())
+            {
+                experience += prey.GetComponent<Animal>().experience;
+            }
             
         }
         else

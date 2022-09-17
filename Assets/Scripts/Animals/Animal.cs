@@ -13,6 +13,7 @@ public class Animal : MonoBehaviour
     public Rigidbody rb;
     public AIHud aiHud;
 
+    public int experience = 1;
     public float health = 5;
     public float food = 0;
     public float birthRate = 5;
