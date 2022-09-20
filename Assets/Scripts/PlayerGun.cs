@@ -25,7 +25,12 @@ public class PlayerGun : PlayerPointer
             GameObject projectile = Instantiate(projectilePrefab, muzzle.transform.position + muzzle.transform.forward * muzzleLength, Quaternion.identity);
             //projectile.transform.position = muzzle.transform.position + muzzle.transform.forward * muzzleLength;
             projectile.GetComponent<Rigidbody>().velocity = muzzle.transform.forward * projectileVelocity;
-            projectile.transform.forward = muzzle.transform.forward;
+            projectile.transform.forward = muzzleDirection();
         }
+    }
+
+    Vector3 muzzleDirection()
+    {
+        return (RightHand_target.position - transform.position).normalized;
     }
 }
