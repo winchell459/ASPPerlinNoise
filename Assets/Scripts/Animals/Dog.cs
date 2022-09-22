@@ -22,6 +22,12 @@ public class Dog : Animal
     public float maxHealth = 10;
     public float maxFood = 10;
     public Transform player;
+
+    public Vector3 lastPos;
+    public float lastPosBuffer = 0.1f;
+    public float lastPosWait = 1;
+    private float lastPosStart;
+    
     public enum States
     {
         idle,
@@ -44,13 +50,14 @@ public class Dog : Animal
         spawnPoint = transform.position;
         stateStartTime = Time.time;
         aiHud.Display();
+        SetLastPos();
     }
 
     // Update is called once per frame
     void Update()
     {
         HandleMapFalloff();
-        if (!dead)
+        if (!dead && lastPosStart + lastPosWait < Time.time)
         {
             HandleHunting();
 
@@ -58,6 +65,12 @@ public class Dog : Animal
         HandleStates();
         HandleAudio();
         aiHud.Display();
+        if (CheckStuckPos())
+        {
+            Debug.Log("Stuck turn");
+            Turn(true, Vector3.zero);
+            SetLastPos();
+        }
     }
 
     private void HandleStates()
@@ -143,6 +156,21 @@ public class Dog : Animal
 
         }
     }
+    bool CheckStuckPos()
+    {
+        if (state == States.idle || state == States.hitIdle || state == States.attackIdle || state == States.attackRun || state == States.attackWalk || state == States.die) return false;
+        if (lastPosStart + lastPosWait < Time.time && Vector3.Distance(lastPos, transform.position) < lastPosBuffer)
+        {
+            return true;
+        }
+        else return false;
+    }
+
+    void SetLastPos()
+    {
+        lastPosStart = Time.time;
+        lastPos = transform.position;
+    }
 
     void SetStates(bool hit, bool attack, float velocity, bool die)
     {
@@ -169,11 +197,13 @@ public class Dog : Animal
             }
         } 
         if (state == States.walk) Turn(followPlayer? false:true, new Vector3(player.position.x - transform.position.x,0, player.position.z - transform.position.z).normalized);
+        SetLastPos();
     }
 
     Animal prey = null;
     private void HandleHunting()
     {
+        
         prey = CheckClosestPrey(FindClosestAnimal(AnimalType.spider));
         if(!prey && health < maxHealth && food <= maxFood /*&& random.Next(0, (int)(maxHealth - health) + 1) < 1*/)
         {

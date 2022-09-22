@@ -44,7 +44,9 @@ public class Animal : MonoBehaviour
     {
         if (random)
         {
-            float dirAngle = this.random.Next(0,360);//Random.Range(0, 360);
+            int[] turns = { 90, 60, 45, 30, 0, -30, -45, -60, -90 };
+            int rand = this.random.Next(0, turns.Length);
+            float dirAngle = turns[rand];//this.random.Next(0,360);//Random.Range(0, 360);
             transform.eulerAngles += Vector3.up * dirAngle;
         }
         else
@@ -52,6 +54,7 @@ public class Animal : MonoBehaviour
             transform.forward = direction;
         }
     }
+    
 
     protected void Move(float target, float acc)
     {
